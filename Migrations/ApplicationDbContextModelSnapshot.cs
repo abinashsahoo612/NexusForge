@@ -154,7 +154,7 @@ namespace TaskManagementSystem.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TaskManagementSystem.Models.ApplicationUser", b =>
+            modelBuilder.Entity("TaskManagementSystem.Models.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -177,7 +177,6 @@ namespace TaskManagementSystem.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
@@ -213,9 +212,6 @@ namespace TaskManagementSystem.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<int?>("WorkspaceId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -225,12 +221,10 @@ namespace TaskManagementSystem.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("WorkspaceId");
-
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("TaskManagementSystem.Models.TaskItem", b =>
+            modelBuilder.Entity("TaskManagementSystem.Models.Task.TaskItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -267,19 +261,14 @@ namespace TaskManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("WorkspaceId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("WorkspaceId");
-
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("Workspace", b =>
+            modelBuilder.Entity("TaskManagementSystem.Models.Workspaces.Workspace", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -290,13 +279,66 @@ namespace TaskManagementSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("CreatedByUserId")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("MembershipPolicy")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Workspace");
+                    b.HasIndex("CreatedByUserId");
+
+                    b.ToTable("Workspaces");
+                });
+
+            modelBuilder.Entity("TaskManagementSystem.Models.Workspaces.WorkspaceMember", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("WorkspaceId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("WorkspaceMembers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -310,7 +352,7 @@ namespace TaskManagementSystem.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("TaskManagementSystem.Models.ApplicationUser", null)
+                    b.HasOne("TaskManagementSystem.Models.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -319,7 +361,7 @@ namespace TaskManagementSystem.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("TaskManagementSystem.Models.ApplicationUser", null)
+                    b.HasOne("TaskManagementSystem.Models.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -334,7 +376,7 @@ namespace TaskManagementSystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TaskManagementSystem.Models.ApplicationUser", null)
+                    b.HasOne("TaskManagementSystem.Models.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -343,32 +385,45 @@ namespace TaskManagementSystem.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("TaskManagementSystem.Models.ApplicationUser", null)
+                    b.HasOne("TaskManagementSystem.Models.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TaskManagementSystem.Models.ApplicationUser", b =>
+            modelBuilder.Entity("TaskManagementSystem.Models.Task.TaskItem", b =>
                 {
-                    b.HasOne("Workspace", "Workspace")
-                        .WithMany("Users")
-                        .HasForeignKey("WorkspaceId");
-
-                    b.Navigation("Workspace");
-                });
-
-            modelBuilder.Entity("TaskManagementSystem.Models.TaskItem", b =>
-                {
-                    b.HasOne("TaskManagementSystem.Models.ApplicationUser", "User")
+                    b.HasOne("TaskManagementSystem.Models.Identity.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Workspace", "Workspace")
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TaskManagementSystem.Models.Workspaces.Workspace", b =>
+                {
+                    b.HasOne("TaskManagementSystem.Models.Identity.ApplicationUser", "CreatedByUser")
                         .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+                });
+
+            modelBuilder.Entity("TaskManagementSystem.Models.Workspaces.WorkspaceMember", b =>
+                {
+                    b.HasOne("TaskManagementSystem.Models.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskManagementSystem.Models.Workspaces.Workspace", "Workspace")
+                        .WithMany("Members")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -378,9 +433,9 @@ namespace TaskManagementSystem.Migrations
                     b.Navigation("Workspace");
                 });
 
-            modelBuilder.Entity("Workspace", b =>
+            modelBuilder.Entity("TaskManagementSystem.Models.Workspaces.Workspace", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("Members");
                 });
 #pragma warning restore 612, 618
         }
