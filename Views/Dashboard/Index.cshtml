@@ -1,0 +1,159 @@
+@using TaskStatus = TaskManagementSystem.Enums.TaskStatus;
+@model TaskManagementSystem.DTOs.Dashboard.DashboardDto
+
+<div class="container mt-5">
+    <h2 class="mb-4 fw-bold text-center">📊 Dashboard</h2>
+
+    <div class="row g-4">
+
+        <!-- Total -->
+        <div class="col-md-3">
+            <div class="dashboard-card total">
+                <h6>Total Tasks</h6>
+                <h2>@Model.TotalTasks</h2>
+            </div>
+        </div>
+
+        <!-- Pending -->
+        <div class="col-md-3">
+            <div class="dashboard-card pending">
+                <h6>Pending</h6>
+                <h2>@Model.PendingTasks</h2>
+            </div>
+        </div>
+
+        <!-- In Progress -->
+        <div class="col-md-3">
+            <div class="dashboard-card in-progress">
+                <h6>In Progress</h6>
+                <h2>@Model.InProgressTasks</h2>
+            </div>
+        </div>
+
+        <!-- Completed -->
+        <div class="col-md-3">
+            <div class="dashboard-card completed">
+                <h6>Completed</h6>
+                <h2>@Model.CompletedTasks</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-5">
+        <h4 class="mb-3">📊 Task Overview</h4>
+        <canvas id="taskChart" height="100"></canvas>
+    </div>
+    <div class="mt-5">
+    <h4 class="mb-3">📋 Recent Tasks</h4>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model.RecentTasks)
+                {
+                    <tr>
+                        <td>@task.Title</td>
+
+                        <td>
+                            <span class="badge 
+                                @(task.Status == TaskStatus.Completed ? "bg-success" :
+                                task.Status == TaskStatus.InProgress ? "bg-info" :
+                                "bg-warning")">
+                                @task.Status
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge bg-dark">
+                                @task.Priority
+                            </span>
+                        </td>
+
+                        <td>
+                            @(task.DueDate?.ToString("dd MMM yyyy") ?? "-")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.OverdueTasks != null && Model.OverdueTasks.Any())
+    {
+        <div class="mt-5">
+            <h4 class="text-danger">🔴 Overdue Tasks</h4>
+
+            <ul class="list-group">
+                @foreach (var task in Model.OverdueTasks)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@task.Title</span>
+                        <span class="text-danger fw-bold">
+                            @(task.DueDate?.ToString("dd MMM"))
+                        </span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (Model.DueSoonTasks != null && Model.DueSoonTasks.Any())
+    {
+        <div class="mt-5">
+            <h4 class="text-warning">⏰ Due Soon</h4>
+
+            <ul class="list-group">
+                @foreach (var task in Model.DueSoonTasks)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@task.Title</span>
+                        <span class="text-warning fw-bold">
+                            @(task.DueDate?.ToString("dd MMM"))
+                        </span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+</div>
+
+<script>
+    const pending = @Model.PendingTasks;
+    const inProgress = @Model.InProgressTasks;
+    const completed = @Model.CompletedTasks;
+</script>
+<script>
+
+    if (typeof Chart !== 'undefined') {
+        const ctx = document.getElementById('taskChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending', 'In Progress', 'Completed'],
+                datasets: [{
+                    data: [pending, inProgress, completed],
+                    backgroundColor: ['#ffc107', '#0dcaf0', '#198754'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+</script>

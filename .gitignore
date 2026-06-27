@@ -1,0 +1,26 @@
+# Build output
+bin/
+obj/
+Areas/
+
+# VS Code
+.vscode/
+
+# JetBrains Rider (if you ever use it)
+.idea/
+
+# User files
+*.user
+*.userosscache
+*.suo
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Environment files (if you create them later)
+.env
+.env.*
+!.env.example

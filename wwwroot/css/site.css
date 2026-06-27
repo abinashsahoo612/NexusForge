@@ -1,0 +1,122 @@
+/* Wrapper (center everything) */
+.auth-wrapper {
+    min-height: calc(100vh - 120px); /* adjust for navbar + footer */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Card with gradient */
+.auth-card {
+    width: 350px;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    color: white;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Subtitle */
+.subtitle {
+    font-size: 14px;
+    margin-bottom: 25px;
+    color: #e0e0e0;
+}
+
+/* Inputs */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+}
+
+/* Checkbox */
+.form-options {
+    text-align: left;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+/* Button */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: white;
+    color: #4f46e5;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background: #f3f4f6;
+}
+
+/* Footer text */
+.auth-footer {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.auth-footer a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Validation */
+.text-danger {
+    color: #ffd4d4;
+    font-size: 12px;
+}
+.dashboard-card {
+    border-radius: 15px;
+    padding: 25px;
+    color: white;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card h6 {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.dashboard-card h2 {
+    font-size: 32px;
+    margin-top: 10px;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Colors */
+.total {
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+}
+
+.pending {
+    background: linear-gradient(135deg, #f7971e, #ffd200);
+}
+
+.in-progress {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+.completed {
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+}
+.table-hover tbody tr:hover {
+    background-color: #f5f5f5;
+}
