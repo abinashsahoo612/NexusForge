@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using TaskManagementSystem.Enums;
+using TaskManagementSystem.Enums.Task;
 
 namespace TaskManagementSystem.DTOs.Task
 {

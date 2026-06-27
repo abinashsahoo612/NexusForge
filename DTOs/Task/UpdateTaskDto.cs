@@ -1,7 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Net.Http.Headers;
-using TaskManagementSystem.Enums;
+using TaskManagementSystem.Enums.Task;
 
 namespace TaskManagementSystem.DTOs.Task
 {
@@ -13,7 +13,7 @@ namespace TaskManagementSystem.DTOs.Task
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public TaskManagementSystem.Enums.TaskStatus Status { get; set; }
+        public TaskManagementSystem.Enums.Task.TaskStatus Status { get; set; }
         public TaskPriority Priority { get; set; }
 
         public DateTime? DueDate { get; set; }

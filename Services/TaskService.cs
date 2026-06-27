@@ -1,7 +1,8 @@
 using TaskManagementSystem.DTOs.Task;
 using TaskManagementSystem.DTOs.Dashboard;
-using TaskManagementSystem.Interfaces;
-using TaskManagementSystem.Models;
+using TaskManagementSystem.Contracts.Repositories;
+using TaskManagementSystem.Contracts.Services;
+using TaskManagementSystem.Models.Task;
 
 namespace TaskManagementSystem.Services
 {

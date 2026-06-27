@@ -1,7 +1,7 @@
 using TaskManagementSystem.DTOs.Task;
 using TaskManagementSystem.DTOs.Dashboard;
 
-namespace TaskManagementSystem.Interfaces
+namespace TaskManagementSystem.Contracts.Services
 {
     public interface ITaskService
     {

@@ -1,6 +1,6 @@
 //To avoid ambigous error between TaskManagementSystem.Enums.TaskStatus and System.Threading.Tasks.TaskStatus
-using TaskStatus = TaskManagementSystem.Enums.TaskStatus;
-using TaskManagementSystem.Enums;
+using TaskStatus = TaskManagementSystem.Enums.Task.TaskStatus;
+using TaskManagementSystem.Enums.Task;
 
 namespace TaskManagementSystem.DTOs.Task
 {

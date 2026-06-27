@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskManagementSystem.Data;
-using TaskManagementSystem.Interfaces;
-using TaskManagementSystem.Models;
+using TaskManagementSystem.Contracts.Repositories;
+using TaskManagementSystem.Contracts.Services;
+using TaskManagementSystem.Models.Identity;
 using TaskManagementSystem.Repositories;
 using TaskManagementSystem.Services;
 

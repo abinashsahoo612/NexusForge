@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagementSystem.Interfaces;
-using TaskManagementSystem.Models;
+using TaskManagementSystem.Contracts.Services;
+using TaskManagementSystem.Models.Identity;
 
 namespace TaskManagementSystem.Controllers
 {

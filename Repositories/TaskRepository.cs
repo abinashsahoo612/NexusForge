@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using TaskManagementSystem.Data;
 using TaskManagementSystem.DTOs.Dashboard;
 using TaskManagementSystem.DTOs.Task;
-using TaskManagementSystem.Interfaces;
-using TaskManagementSystem.Models;
-using TaskStatus = TaskManagementSystem.Enums.TaskStatus;
+using TaskManagementSystem.Contracts.Repositories;
+using TaskManagementSystem.Models.Task;
+using TaskStatus = TaskManagementSystem.Enums.Task.TaskStatus;
 
 namespace TaskManagementSystem.Repositories
 {

@@ -1,7 +1,7 @@
 using TaskManagementSystem.DTOs.Dashboard;
-using TaskManagementSystem.Models;
+using TaskManagementSystem.Models.Task;
 
-namespace TaskManagementSystem.Interfaces
+namespace TaskManagementSystem.Contracts.Repositories
 {
     public interface ITaskRepository
     {

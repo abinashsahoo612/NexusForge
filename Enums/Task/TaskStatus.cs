@@ -1,4 +1,4 @@
-namespace TaskManagementSystem.Enums
+namespace TaskManagementSystem.Enums.Task
 {
     public enum TaskStatus
     {

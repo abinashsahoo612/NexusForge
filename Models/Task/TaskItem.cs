@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TaskManagementSystem.Enums;
+using TaskManagementSystem.Enums.Task;
+using TaskManagementSystem.Models.Identity;
 
-namespace TaskManagementSystem.Models
+namespace TaskManagementSystem.Models.Task
 {
     public class TaskItem
     {
@@ -16,7 +17,7 @@ namespace TaskManagementSystem.Models
         public string Description { get; set; }
 
         //To avoid ambigous error between TaskManagementSystem.Enums.TaskStatus and System.Threading.Tasks.TaskStatus
-        public TaskManagementSystem.Enums.TaskStatus Status { get; set; } = TaskManagementSystem.Enums.TaskStatus.Pending;
+        public TaskManagementSystem.Enums.Task.TaskStatus Status { get; set; } = TaskManagementSystem.Enums.Task.TaskStatus.Pending;
 
         public TaskPriority Priority { get; set; } = TaskPriority.Medium;
 

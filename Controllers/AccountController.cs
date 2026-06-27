@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagementSystem.Models;
-using TaskManagementSystem.ViewModels;
+using TaskManagementSystem.Models.Identity;
+using TaskManagementSystem.ViewModels.Account;
 
 namespace TaskManagementSystem.Controllers;
 
