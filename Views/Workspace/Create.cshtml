@@ -1,0 +1,46 @@
+@model TaskManagementSystem.DTOs.Workspaces.CreateWorkspaceDto
+
+@using TaskManagementSystem.Enums.Workspaces
+
+<h2>Create Workspace</h2>
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+
+        <input asp-for="Name" class="form-control"/>
+
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+
+        <textarea asp-for="Description"
+                  class="form-control"></textarea>
+
+        <span asp-validation-for="Description"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MembershipPolicy"
+               class="form-label"></label>
+
+        <select asp-for="MembershipPolicy"
+                asp-items="Html.GetEnumSelectList<MembershipPolicy>()"
+                class="form-select">
+        </select>
+    </div>
+
+    <button class="btn btn-primary">
+        Create Workspace
+    </button>
+
+</form>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial"/>
+}
