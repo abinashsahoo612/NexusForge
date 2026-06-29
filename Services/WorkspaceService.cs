@@ -50,7 +50,7 @@ namespace TaskManagementSystem.Services
                 {
                     Workspace = workspace,
                     UserId = currentUserId,
-                    // AddedByUserId = currentUserId,
+                    AddedByUserId = currentUserId,
                     Role = WorkspaceRole.Admin,
                     JoinedAt = DateTime.UtcNow,
                     IsActive = true
@@ -81,9 +81,9 @@ namespace TaskManagementSystem.Services
             }
         }
 
-        public Task<IEnumerable<WorkspaceDto>> GetUserWorkspacesAsync(string userId)
+        public async Task<IEnumerable<WorkspaceListItemDto>> GetUserWorkspacesAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await _workspaceRepository.GetUserWorkspacesAsync(userId);
         }
 
         public Task<WorkspaceDto?> GetWorkspaceByIdAsync(int workspaceId, string currentUserId)

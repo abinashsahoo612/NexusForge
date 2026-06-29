@@ -8,7 +8,7 @@ namespace TaskManagementSystem.Contracts.Services
             CreateWorkspaceDto dto,
             string currentUserId);
 
-        Task<IEnumerable<WorkspaceDto>> GetUserWorkspacesAsync(
+        Task<IEnumerable<WorkspaceListItemDto>> GetUserWorkspacesAsync(
             string userId);
 
         Task<WorkspaceDto?> GetWorkspaceByIdAsync(

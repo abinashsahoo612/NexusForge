@@ -21,10 +21,10 @@ namespace TaskManagementSystem.Models.Workspaces
 
         // User who created this workspace
         [Required]
-        public string CreatedByUserId { get; set; }
+        public string CreatedByUserId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(CreatedByUserId))]
-        public ApplicationUser CreatedByUser { get; set; }
+        public ApplicationUser CreatedByUser { get; set; } = null!;
 
         public ICollection<WorkspaceMember> Members { get; set; } = new List<WorkspaceMember>();
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -32,7 +32,5 @@ namespace TaskManagementSystem.Models.Workspaces
         public DateTime? UpdatedAt { get; set; }
 
         public bool IsActive { get; set; } = true;
-
-        // Navigation Property
     }
 }

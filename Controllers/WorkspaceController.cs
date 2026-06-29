@@ -41,13 +41,19 @@ namespace TaskManagementSystem.Controllers
 
             await _workspaceService.CreateWorkspaceAsync(dto, user.Id);
 
-            // return RedirectToAction(nameof(Index));
-            return RedirectToAction("Index", "Dashboard");
+            return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return RedirectToAction("Index", "Dashboard");
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Challenge();
+
+            var workspaces = await _workspaceService.GetUserWorkspacesAsync(user.Id);
+
+            return View(workspaces);
         }
     }
 }

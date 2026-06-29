@@ -1,4 +1,4 @@
-
+using TaskManagementSystem.DTOs.Workspaces;
 using TaskManagementSystem.Models.Workspaces;
 
 public interface IWorkspaceRepository
@@ -8,4 +8,6 @@ public interface IWorkspaceRepository
     Task<Workspace?> GetByIdAsync(int id);
     Task<IEnumerable<Workspace>> GetAllAsync();
     Task<bool> ExistsAsync(int id);
+
+    Task<IEnumerable<WorkspaceListItemDto>> GetUserWorkspacesAsync(string userId);
 }
