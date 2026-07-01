@@ -18,5 +18,7 @@ namespace TaskManagementSystem.Contracts.Services
         Task<bool> UpdateWorkspaceAsync(
             UpdateWorkspaceDto dto,
             string currentUserId);
+
+        Task<WorkspaceDetailsDto?> GetWorkspaceDetailsAsync(int workspaceId, string userId);
     }
 }

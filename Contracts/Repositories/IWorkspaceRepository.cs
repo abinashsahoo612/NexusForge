@@ -10,4 +10,6 @@ public interface IWorkspaceRepository
     Task<bool> ExistsAsync(int id);
 
     Task<IEnumerable<WorkspaceListItemDto>> GetUserWorkspacesAsync(string userId);
+
+    Task<WorkspaceDetailsDto?> GetWorkspaceDetailsAsync(int workspaceId, string userId);
 }

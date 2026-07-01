@@ -95,5 +95,10 @@ namespace TaskManagementSystem.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<WorkspaceDetailsDto?> GetWorkspaceDetailsAsync(int workspaceId, string userId)
+        {
+            return await _workspaceRepository.GetWorkspaceDetailsAsync(workspaceId, userId);
+        }
     }
 }

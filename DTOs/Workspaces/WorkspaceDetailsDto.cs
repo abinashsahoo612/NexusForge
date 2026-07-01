@@ -2,22 +2,23 @@ using TaskManagementSystem.Enums.Workspaces;
 
 namespace TaskManagementSystem.DTOs.Workspaces
 {
-    public class WorkspaceDto
+    public class WorkspaceDetailsDto
     {
         public int Id { get; set; }
 
-        public string Name { get; set; } = default!;
+        public string Name { get; set; } = string.Empty;
 
         public string? Description { get; set; }
 
-        public MembershipPolicy MembershipPolicy { get; set; } 
+        public bool IsActive { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
-        public bool IsActive { get; set; }
-
         public int MemberCount { get; set; }
 
+        public MembershipPolicy MembershipPolicy { get; set; }
+
         public WorkspaceRole MyRole { get; set; }
+
     }
 }

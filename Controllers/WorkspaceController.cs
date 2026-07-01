@@ -55,5 +55,20 @@ namespace TaskManagementSystem.Controllers
 
             return View(workspaces);
         }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Challenge();
+
+            var workspace = await _workspaceService.GetWorkspaceDetailsAsync(id, user.Id);
+
+            if (workspace == null)
+                return NotFound();
+
+            return View(workspace);
+        }
     }
 }

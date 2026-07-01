@@ -1,0 +1,60 @@
+@model TaskManagementSystem.DTOs.Workspaces.WorkspaceDetailsDto
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary mb-3">
+            ← Back to Workspaces
+        </a>
+
+        <h2>@Model.Name</h2>
+
+        <p class="text-muted">
+            @Model.Description
+        </p>
+
+        <hr />
+
+        <div class="row text-center">
+
+            <div class="col-md-3">
+                <h6>Your Role</h6>
+                <p>@Model.MyRole</p>
+            </div>
+
+            <div class="col-md-3">
+                <h6>Members</h6>
+                <p>@Model.MemberCount</p>
+            </div>
+
+            <div class="col-md-3">
+                <h6>Policy</h6>
+                <p>@Model.MembershipPolicy</p>
+            </div>
+
+            <div class="col-md-3">
+
+                <h6>Status</h6>
+
+                @if(Model.IsActive)
+                {
+                    <span class="badge bg-success">
+                        Active
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">
+                        Inactive
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

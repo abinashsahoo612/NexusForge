@@ -60,5 +60,26 @@ namespace TaskManagementSystem.Repositories
                 .OrderBy(w => w.Name)
                 .ToListAsync();
         }
+
+        public async Task<WorkspaceDetailsDto?> GetWorkspaceDetailsAsync(int workspaceId, string userId)
+        {
+            return await _context.WorkspaceMembers
+                .Where(wm =>
+                    wm.WorkspaceId == workspaceId &&
+                    wm.UserId == userId &&
+                    wm.IsActive)
+                .Select(wm => new WorkspaceDetailsDto
+                {
+                    Id = wm.Workspace.Id,
+                    Name = wm.Workspace.Name,
+                    Description = wm.Workspace.Description,
+                    MembershipPolicy = wm.Workspace.MembershipPolicy,
+                    IsActive = wm.Workspace.IsActive,
+                    CreatedAt = wm.Workspace.CreatedAt,
+                    MemberCount = wm.Workspace.Members.Count(m => m.IsActive),
+                    MyRole = wm.Role
+                })
+                .FirstOrDefaultAsync();
+        }
     }
 }
