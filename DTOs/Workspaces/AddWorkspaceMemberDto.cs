@@ -9,10 +9,9 @@ namespace TaskManagementSystem.DTOs.Workspaces
         public int WorkspaceId { get; set; }
 
         [Required]
-        [EmailAddress]
-        public string Email { get; set; } = default!;
+        public string UserId { get; set; }
 
         [Required]
-        public WorkspaceRole Role { get; set; }
+        public WorkspaceRole Role { get; set; } = WorkspaceRole.Member;
     }
 }

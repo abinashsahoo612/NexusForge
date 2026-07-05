@@ -41,13 +41,13 @@ namespace TaskManagementSystem.Repositories
                     x.UserId == userId);
         }
 
-        public async Task<bool> IsMemberAsync(int workspaceId, string userId)
-        {
-            return await _context.WorkspaceMembers
-                .AnyAsync(x =>
-                    x.WorkspaceId == workspaceId &&
-                    x.UserId == userId &&
-                    x.IsActive);
-        }
+        // public async Task<bool> IsMemberAsync(int workspaceId, string userId)
+        // {
+        //     return await _context.WorkspaceMembers
+        //         .AnyAsync(x =>
+        //             x.WorkspaceId == workspaceId &&
+        //             x.UserId == userId &&
+        //             x.IsActive);
+        // }
     }
 }

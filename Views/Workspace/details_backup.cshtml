@@ -1,0 +1,278 @@
+@model TaskManagementSystem.DTOs.Workspaces.WorkspaceDetailsDto
+@using TaskManagementSystem.Enums.Workspaces
+
+@{
+    ViewData["Title"] = "Workspace Details";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Workspace Details</h2>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Back
+        </a>
+    </div>
+
+    <div class="row">
+
+        <!-- Workspace Information -->
+        <div class="col-lg-7 mb-4">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                    <h3 class="mb-1">@Model.Name</h3>
+
+                    <p class="text-muted mb-4">
+                        @Model.Description
+                    </p>
+                    <hr class="my-4" />
+                    <div class="card-body">
+                        <table class="table table-borderless mb-0">
+                            <tr>
+                                <th>Description</th>
+                                <td>@Model.Description</td>
+                            </tr>
+
+                            <tr>
+                                <th>Membership Policy</th>
+                                <td>@Model.MembershipPolicy</td>
+                            </tr>
+
+                            @* <tr>
+                                <th>My Role</th>
+                                <td>@Model.MyRole</td>
+                            </tr> *@
+
+                            <tr>
+                                <th>Total Members</th>
+                                <td>@Model.MemberCount</td>
+                            </tr>
+
+                            <tr>
+                                <th>Created On</th>
+                                <td>@Model.CreatedAt.ToString("dd MMM yyyy")</td>
+                            </tr>
+
+                            <tr>
+                                <th>Status</th>
+                                <td>
+
+                                    @if (Model.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactive</span>
+                                    }
+
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Right Side -->
+        <div class="col-lg-5 mb-4">
+
+            @if (Model.MyRole == WorkspaceRole.Admin)
+            {
+                <div class="card shadow-sm mb-3">
+
+                    <div class="card-header">
+                        <strong>Add Member</strong>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form asp-action="AddMember" method="post">
+
+                            <input type="hidden"
+                                   name="WorkspaceId"
+                                   value="@Model.Id" />
+
+                            <div class="input-group">
+
+                                <select class="form-select"
+                                        name="UserId">
+
+                                    <option value="">
+                                        -- Select User --
+                                    </option>
+
+                                </select>
+
+                                <button type="submit"
+                                        class="btn btn-success">
+                                    Add
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+            }
+
+            <div class="card shadow-sm">
+
+                <div class="card-header">
+                    <strong>Workspace Statistics</strong>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row text-center">
+
+                        <div class="col-6 border-end">
+
+                            <h3>@Model.MemberCount</h3>
+
+                            <small class="text-muted">
+                                Members
+                            </small>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            <h3>@Model.MyRole</h3>
+
+                            <small class="text-muted">
+                                My Role
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <hr />
+
+                    <div class="row text-center">
+
+                        <div class="col-6 border-end">
+
+                            <strong>
+                                @Model.MembershipPolicy
+                            </strong>
+
+                            <br />
+
+                            <small class="text-muted">
+                                Policy
+                            </small>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            @if (Model.IsActive)
+                            {
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">
+                                    Inactive
+                                </span>
+                            }
+
+                            <br />
+
+                            <small class="text-muted">
+                                Status
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm">
+
+        <div class="card-header">
+            <strong>Workspace Members</strong>
+        </div>
+
+        <div class="card-body p-0">
+
+            <table class="table table-striped table-hover mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Joined On</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var member in Model.Members)
+                    {
+                        <tr>
+
+                            <td>@member.FullName</td>
+
+                            <td>@member.Email</td>
+
+                            <td>@member.Role</td>
+
+                            <td>
+                                @member.JoinedAt.ToString("dd MMM yyyy")
+                            </td>
+
+                            <td>
+
+                                @if (member.IsActive)
+                                {
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Inactive
+                                    </span>
+                                }
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

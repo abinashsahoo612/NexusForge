@@ -1,94 +1,87 @@
+@using TaskManagementSystem.Enums.Workspaces
 @model IEnumerable<TaskManagementSystem.DTOs.Workspaces.WorkspaceListItemDto>
 
-<div class="container mt-5">
+@{
+    ViewData["Title"] = "Workspaces";
+}
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>My Workspaces</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Workspaces</h2>
 
-        <a asp-action="Create"
-           class="btn btn-primary">
-            + Create Workspace
-        </a>
-    </div>
+    <a asp-action="Create" class="btn btn-sm btn-info">
+        Create Workspace
+    </a>
+</div>
 
-    @if (!Model.Any())
+<table class="table table-bordered table-striped table-hover">
+
+    <thead class="table-light">
+
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Members</th>
+            <th>Policy</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th width="150">Action</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    @if (Model.Any())
     {
-        <div class="alert alert-info">
-            You are not a member of any workspace.
-        </div>
+        @foreach (var workspace in Model)
+        {
+            <tr>
+
+                <td>@workspace.Name</td>
+
+                <td>@workspace.Description</td>
+
+                <td>@workspace.MemberCount</td>
+
+                <td>@workspace.MembershipPolicy</td>
+
+                <td>@workspace.MyRole</td>
+
+                <td>
+                    @(workspace.IsActive ? "Active" : "Inactive")
+                </td>
+
+                <td>
+
+                    <a asp-action="Details"
+                       asp-route-id="@workspace.Id"
+                       class="btn btn-sm btn-info">
+                        View
+                    </a>
+
+                    @if (workspace.MyRole == WorkspaceRole.Admin)
+                    {
+                        <a asp-action="Edit"
+                        asp-route-id="@workspace.Id"
+                        class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
+                    }
+
+                </td>
+
+            </tr>
+        }
     }
     else
     {
-        <div class="row">
-
-            @foreach (var workspace in Model)
-            {
-                <div class="col-md-6 mb-4">
-
-                    <div class="card shadow-sm h-100">
-
-                        <div class="card-body">
-
-                            <h4>@workspace.Name</h4>
-
-                            <p class="text-muted">
-                                @workspace.Description
-                            </p>
-
-                            <hr />
-
-                            <p>
-                                <strong>Role:</strong>
-                                @workspace.MyRole
-                            </p>
-
-                            <p>
-                                <strong>Policy:</strong>
-                                @workspace.MembershipPolicy
-                            </p>
-
-                            <p>
-                                <strong>Members:</strong>
-                                @workspace.MemberCount
-                            </p>
-
-                            <p>
-                                <strong>Status:</strong>
-
-                                @if (workspace.IsActive)
-                                {
-                                    <span class="badge bg-success">
-                                        Active
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">
-                                        Inactive
-                                    </span>
-                                }
-                            </p>
-
-                        </div>
-
-                        <div class="card-footer bg-white">
-
-                            <a asp-action="Details"
-                               asp-route-id="@workspace.Id"
-                               class="btn btn-outline-primary w-100">
-
-                                Open Workspace
-
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            }
-
-        </div>
+        <tr>
+            <td colspan="7" class="text-center">
+                No workspaces found.
+            </td>
+        </tr>
     }
 
-</div>
+    </tbody>
+
+</table>

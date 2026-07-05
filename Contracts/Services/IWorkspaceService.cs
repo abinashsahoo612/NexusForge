@@ -1,3 +1,4 @@
+using TaskManagementSystem.Common.Results;
 using TaskManagementSystem.DTOs.Workspaces;
 
 namespace TaskManagementSystem.Contracts.Services
@@ -12,13 +13,15 @@ namespace TaskManagementSystem.Contracts.Services
             string userId);
 
         Task<WorkspaceDto?> GetWorkspaceByIdAsync(
-            int workspaceId,
-            string currentUserId);
+            int workspaceId);
 
         Task<bool> UpdateWorkspaceAsync(
             UpdateWorkspaceDto dto,
             string currentUserId);
 
-        Task<WorkspaceDetailsDto?> GetWorkspaceDetailsAsync(int workspaceId, string userId);
+        Task<WorkspaceDetailsDto?> GetWorkspaceDetailsAsync(int workspaceId, string currentUserId);
+
+        Task<ServiceResult> AddMemberAsync(AddWorkspaceMemberDto dto, string currentUserId);
+        Task<ServiceResult> CreateMemberAsync(CreateWorkspaceMemberDto dto, string currentUserId);
     }
 }

@@ -1,0 +1,66 @@
+@model IEnumerable<TaskManagementSystem.DTOs.Workspaces.WorkspaceMemberDto>
+
+<div class="card mb-6">
+
+    <div class="card-header">
+        <strong>Workspace Members</strong>
+    </div>
+
+    <div class="card-body p-2">
+
+        @* <table class="table table-striped table-hover mb-0"> *@
+        <table class="table table-striped table-hover" id="memberTable">
+
+            <thead class="table-light">
+
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Joined On</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach (var member in Model)
+                {
+                    <tr>
+
+                        <td>@member.FullName</td>
+
+                        <td>@member.Email</td>
+
+                        <td>@member.Role</td>
+
+                        <td>@member.JoinedAt.ToString("dd MMM yyyy")</td>
+
+                        <td>
+
+                            @if (member.IsActive)
+                            {
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">
+                                    Inactive
+                                </span>
+                            }
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

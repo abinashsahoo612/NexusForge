@@ -1,4 +1,5 @@
 using TaskManagementSystem.DTOs.Dashboard;
+using TaskManagementSystem.DTOs.Workspaces;
 using TaskManagementSystem.Models.Task;
 
 namespace TaskManagementSystem.Contracts.Repositories

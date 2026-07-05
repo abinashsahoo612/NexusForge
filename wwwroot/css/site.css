@@ -47,7 +47,7 @@
 }
 
 /* Button */
-.btn-primary {
+/* .btn-primary {
     width: 100%;
     padding: 12px;
     background: white;
@@ -60,10 +60,10 @@
 
 .btn-primary:hover {
     background: #f3f4f6;
-}
+} */
 
 /* Footer text */
-.auth-footer {
+/* .auth-footer {
     margin-top: 20px;
     font-size: 14px;
 }
@@ -71,7 +71,7 @@
 .auth-footer a {
     color: #fff;
     text-decoration: underline;
-}
+} */
 
 /* Validation */
 .text-danger {

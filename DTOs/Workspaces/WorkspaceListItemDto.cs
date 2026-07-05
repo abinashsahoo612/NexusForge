@@ -1,3 +1,5 @@
+using TaskManagementSystem.Enums.Workspaces;
+
 namespace TaskManagementSystem.DTOs.Workspaces
 {
     public class WorkspaceListItemDto
@@ -8,9 +10,9 @@ namespace TaskManagementSystem.DTOs.Workspaces
 
         public string? Description { get; set; }
 
-        public string MyRole { get; set; } = string.Empty;
+        public WorkspaceRole MyRole { get; set; }
 
-        public string MembershipPolicy { get; set; } = string.Empty;
+        public MembershipPolicy MembershipPolicy { get; set; }
 
         public bool IsActive { get; set; }
 

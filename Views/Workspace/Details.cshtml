@@ -1,15 +1,29 @@
 @model TaskManagementSystem.DTOs.Workspaces.WorkspaceDetailsDto
 
-<div class="container mt-4">
+@{
+    ViewData["Title"] = "Workspace Details";
+}
 
-    <partial name="Partials/_WorkspaceHeader" model="Model" />
+<div class="container-fluid">
 
-    <partial name="Partials/_WorkspaceTabs" model="Model" />
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Workspace Details</h3>
 
-    <div id="workspace-content">
-
-        <partial name="Partials/_Dashboard" model="Model" />
-
+        <a asp-action="Index" class="btn btn-secondary">
+            Back
+        </a>
     </div>
+    <div class="row justify-content-between ">
+        <div class="col-xl-4 col-lg-4">
+            <partial name="Partials/_WorkspaceInfo" model="Model" />
+        </div>
+        <div class="col-xl-8 col-lg-8">
+            <partial name="Partials/_AddMember" model="Model.AllUser"/>
+        </div>
+    </div>
+
+    <hr class="my-4" />
+
+    <partial name="Partials/_WorkspaceMembers" model="Model.Members" />
 
 </div>

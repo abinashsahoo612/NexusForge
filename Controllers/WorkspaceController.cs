@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TaskManagementSystem.Common.Results;
 using TaskManagementSystem.Contracts.Services;
 using TaskManagementSystem.DTOs.Workspaces;
 using TaskManagementSystem.Models.Identity;
@@ -69,6 +70,40 @@ namespace TaskManagementSystem.Controllers
                 return NotFound();
 
             return View(workspace);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddMember(AddWorkspaceMemberDto dto)
+        {
+            if (!ModelState.IsValid)
+                return Json(ServiceResult.Fail("Invalid request."));
+
+            var currentUserId = _userManager.GetUserId(User);
+
+            if (string.IsNullOrEmpty(currentUserId))
+                return Challenge();
+
+            var result = await _workspaceService.AddMemberAsync(dto, currentUserId);
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateMember(CreateWorkspaceMemberDto dto)
+        {
+            if (!ModelState.IsValid)
+                return Json(ServiceResult.Fail("Invalid request."));
+
+            var currentUserId = _userManager.GetUserId(User);
+
+            if (string.IsNullOrEmpty(currentUserId))
+                return Challenge();
+
+            var result = await _workspaceService.CreateMemberAsync(dto, currentUserId);
+
+            return Json(result);
         }
     }
 }

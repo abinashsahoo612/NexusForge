@@ -2,7 +2,34 @@
 @model TaskManagementSystem.DTOs.Dashboard.DashboardDto
 
 <div class="container mt-5">
-    <h2 class="mb-4 fw-bold text-center">📊 Dashboard</h2>
+    <div class="row justify-content-between align-items-center mb-4">
+
+        <div class="col-lg-5">
+            <h2 class="fw-bold mb-0">
+                📊 Dashboard
+            </h2>
+        </div>
+
+        <div class="col-lg-4">
+
+            <form asp-action="Index" method="get">
+
+                <div class="input-group">
+
+                    <select class="form-select" name="workspaceId">
+
+                        <option value="">All Workspaces</option>
+
+                    </select>
+
+                    <button class="btn btn-success" type="submit">
+                        Apply
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
 
     <div class="row g-4">
 

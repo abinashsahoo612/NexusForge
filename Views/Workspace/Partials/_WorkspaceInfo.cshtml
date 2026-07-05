@@ -1,0 +1,103 @@
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <h3 class="mb-1">@Model.Name</h3>
+
+        <p class="text-muted mb-4">
+            @Model.Description
+        </p>
+        <hr class="my-4" />
+        @* <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <strong>Status</strong><br />
+
+                @if(Model.IsActive)
+                {
+                    <span class="badge bg-success">Active</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Inactive</span>
+                }
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Membership Policy</strong><br />
+                @Model.MembershipPolicy
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>My Role</strong><br />
+                @Model.MyRole
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <strong>Total Members</strong><br />
+                @Model.MemberCount
+            </div>
+
+            <div class="col-md-6">
+                <strong>Created On</strong><br />
+                @Model.CreatedAt.ToString("dd MMM yyyy")
+            </div>
+
+        </div> *@
+        <div class="card-body">
+
+            <table class="table table-borderless mb-0">
+
+                @* <tr>
+                    <th width="220">Workspace Name</th>
+                    <td>@Model.Name</td>
+                </tr>
+
+                <tr>
+                    <th>Description</th>
+                    <td>@Model.Description</td>
+                </tr> *@
+
+                <tr>
+                    <th>Membership Policy</th>
+                    <td>@Model.MembershipPolicy</td>
+                </tr>
+
+                <tr>
+                    <th>My Role</th>
+                    <td>@Model.MyRole</td>
+                </tr>
+
+                <tr>
+                    <th>Total Members</th>
+                    <td>@Model.MemberCount</td>
+                </tr>
+
+                <tr>
+                    <th>Created On</th>
+                    <td>@Model.CreatedAt.ToString("dd MMM yyyy")</td>
+                </tr>
+
+                <tr>
+                    <th>Status</th>
+                    <td>
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inactive</span>
+                        }
+
+                    </td>
+                </tr>
+
+            </table>
+            <input type="hidden" id="WorkspaceId" value="@Model.Id" />
+        </div>
+    </div>
+
+</div>
