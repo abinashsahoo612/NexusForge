@@ -4,6 +4,7 @@ using TaskManagementSystem.Common.Results;
 using TaskManagementSystem.Contracts.Repositories;
 using TaskManagementSystem.Contracts.Services;
 using TaskManagementSystem.Data;
+using TaskManagementSystem.DTOs.Task;
 using TaskManagementSystem.DTOs.Workspaces;
 using TaskManagementSystem.Enums.Workspaces;
 using TaskManagementSystem.Models.Identity;
@@ -202,6 +203,11 @@ namespace TaskManagementSystem.Services
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+    
+        public async Task<ServiceResult<TaskDto>> GetTasksByWorkspaceIdAsync(int WorkspaceId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -48,7 +48,7 @@ namespace TaskManagementSystem.Repositories
         }
 
         public async Task<DashboardDto> GetDashboardDataAsync(string userId)
-{
+        {
             var tasks = await _context.Tasks
                 .Where(t => t.UserId == userId)
                 .ToListAsync();
@@ -98,5 +98,12 @@ namespace TaskManagementSystem.Repositories
                                 }).ToList()
             };
         }
+
+        // public async Task<IEnumerable<TaskItem>> GetTasksByWorkspaceIdAsync(int WorkspaceId)
+        // {
+        //     return await _context.Tasks
+        //         .Where(t => t.WorkspaceId == WorkspaceId)
+        //         .ToListAsync();
+        // }
     }
 }
