@@ -15,5 +15,6 @@ namespace TaskManagementSystem.Data
             public DbSet<TaskItem> Tasks { get; set; }
             public DbSet<Workspace> Workspaces { get; set; }
             public DbSet<WorkspaceMember> WorkspaceMembers { get; set; }
+            public DbSet<Project> Project { get; set; }
     }
 }

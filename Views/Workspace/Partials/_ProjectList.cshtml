@@ -1,0 +1,168 @@
+@model IEnumerable<TaskManagementSystem.DTOs.Projects.ProjectListItemDto>
+
+<div class="card mb-6">
+
+    <div class="card-header">
+        <div class="d-flex justify-content-between">
+            <strong class="my-2">Projects</strong>
+            <button class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addProjectModal">
+
+                <i class="bi bi-folder-plus"></i>
+                Add Project
+
+            </button>
+        </div>
+    </div>
+
+    <div class="card-body p-2">
+
+        @* <table class="table table-striped table-hover mb-0"> *@
+        <table class="table table-striped table-hover" id="projectListTable">
+
+            <thead class="table-light">
+
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Role</th>
+                    @* <th>Joined On</th> *@
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var projectItem in Model)
+                    {
+                        <tr>
+
+                            <td>@projectItem.Name</td>
+
+                            <td>@projectItem.Description</td>
+
+                            <td>@projectItem.MyRole</td>
+
+                            <td>
+
+                                @if (projectItem.IsActive)
+                                {
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Inactive
+                                    </span>
+                                }
+
+                            </td>
+
+                        </tr>
+                    }
+                } 
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            No projects found.
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="modal fade"
+     id="addProjectModal"
+     tabindex="-1"
+     aria-labelledby="addProjectModalLabel"
+     aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content shadow-lg border-0 rounded-4">
+
+                <div class="modal-header bg-primary text-white">
+
+                    <h5 class="modal-title fw-semibold" id="addProjectModalLabel">
+                        <i class="bi bi-folder-plus me-2"></i>
+                        Create New Project
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    @Html.AntiForgeryToken()
+
+                    @* <input type="hidden"
+                        id="projectWorkspaceId"
+                        value="@Model.Id" /> *@
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-semibold">
+                            Project Name
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            id="Name"
+                            placeholder="Enter project name" />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-semibold">
+                            Description
+                        </label>
+
+                        <textarea class="form-control"
+                                id="Description"
+                                rows="4"
+                                placeholder="Write a short description..."></textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-light"
+                            data-bs-dismiss="modal">
+
+                        Cancel
+
+                    </button>
+
+                    <button class="btn btn-primary"
+                            id="addProject">
+
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Create Project
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

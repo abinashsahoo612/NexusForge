@@ -1,5 +1,6 @@
 using TaskManagementSystem.Enums.Workspaces;
 using TaskManagementSystem.DTOs.Account;
+using TaskManagementSystem.DTOs.Projects;
 
 namespace TaskManagementSystem.DTOs.Workspaces
 {
@@ -24,6 +25,7 @@ namespace TaskManagementSystem.DTOs.Workspaces
         public WorkspaceRole MyRole { get; set; }
 
         public List<UserListDto> AllUser {get; set;} = new();
+        public List<ProjectListItemDto> ProjectList {get; set;} = new();
 
     }
 }

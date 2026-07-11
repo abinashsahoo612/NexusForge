@@ -38,6 +38,25 @@
         });
     });
 
+    $("#addProject").click(function () {
+        Swal.fire({
+            title: "Add Project?",
+            text: "Do you want to add this project for this workspace?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#198754",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: "Ok",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+
+            if (!result.isConfirmed)
+                return;
+            else
+                createProject();
+        });
+    });
+
     function addMember() {
 
         const workspaceId = $("#WorkspaceId").val();
@@ -206,6 +225,7 @@
         });
 
     }
+
     $("#memberTable").DataTable({
 
         pageLength: 10,
@@ -225,5 +245,114 @@
         }
 
     });
+
+    $("#projectListTable").DataTable({
+
+        pageLength: 10,
+
+        ordering: true,
+
+        searching: true,
+
+        lengthChange: false,
+
+        info: true,
+
+        responsive: true,
+
+        language: {
+            search: "Search:"
+        }
+
+    });
+
+    function createProject() {
+
+        const workspaceId = $("#WorkspaceId").val();
+        const name = $("#Name").val();
+        const description = $("#Description").val();
+        console.log(name,workspaceId,description);
+        if (name === "" || workspaceId === "" || description === "") {
+
+            Swal.fire({
+                icon: "warning",
+                title: "Validation",
+                text: "Please fill all the field."
+            });
+
+            return;
+        }
+
+        Swal.fire({
+
+            title: "Create Project?",
+            text: "Do you want to create this project?",
+            icon: "question",
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#0d6efd",
+            cancelButtonColor: "#6c757d",
+
+            confirmButtonText: "Yes, Create"
+
+        }).then((result) => {
+
+            if (!result.isConfirmed)
+                return;
+
+            $.ajax({
+
+                url: "/Project/Create",
+
+                type: "POST",
+
+                data: {
+
+                    __RequestVerificationToken:
+                        $('input[name="__RequestVerificationToken"]').val(),
+
+                    workspaceId: workspaceId,
+                    name: name,
+                    description: description
+
+                },
+
+                success: function (response) {
+
+                    if (response.success) {
+
+                        $("#addProjectModal").modal("hide");
+
+                        Swal.fire({
+
+                            icon: "success",
+                            title: "Success",
+                            text: response.message
+
+                        }).then(() => {
+
+                            window.location.reload();
+
+                        });
+
+                    }
+                    else {
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: response.message
+                        });
+
+                    }
+
+                }
+
+            });
+
+        });
+
+    }
     // WorkspaceJS end
 });

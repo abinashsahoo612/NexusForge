@@ -6,6 +6,7 @@ using TaskManagementSystem.DTOs.Account;
 using Microsoft.AspNetCore.Identity;
 using TaskManagementSystem.Models.Identity;
 using TaskManagementSystem.Enums.Workspaces;
+using TaskManagementSystem.DTOs.Projects;
 
 namespace TaskManagementSystem.Repositories
 {
@@ -127,6 +128,13 @@ namespace TaskManagementSystem.Repositories
                                     IsActive = m.IsActive
                                 })
                                 .ToList(),
+                    ProjectList = wm.Workspace.Projects.Select(p => new ProjectListItemDto
+                                    {
+                                        Name = p.Name,
+                                        Description = p.Description,
+                                        IsActive = p.IsActive,
+                                        MyRole = wm.Role,
+                                    }).ToList(),
                     MyRole = wm.Role,
                     AllUser = Users
                 })
