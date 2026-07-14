@@ -1,16 +1,17 @@
 using TaskManagementSystem.Common.Results;
 using TaskManagementSystem.DTOs.Task;
 using TaskManagementSystem.DTOs.Workspaces;
+using TaskManagementSystem.ViewModels.Workspace;
 
 namespace TaskManagementSystem.Contracts.Services
 {
     public interface IWorkspaceService
     {
-        Task<WorkspaceDto> CreateWorkspaceAsync(
+        Task<ServiceResult> CreateWorkspaceAsync(
             CreateWorkspaceDto dto,
             string currentUserId);
 
-        Task<IEnumerable<WorkspaceListItemDto>> GetUserWorkspacesAsync(
+        Task<ServiceResult<IEnumerable<WorkspaceListItemDto>>> GetUserWorkspacesAsync(
             string userId);
 
         Task<WorkspaceDto?> GetWorkspaceByIdAsync(
@@ -20,7 +21,7 @@ namespace TaskManagementSystem.Contracts.Services
             UpdateWorkspaceDto dto,
             string currentUserId);
 
-        Task<WorkspaceDetailsDto?> GetWorkspaceDetailsAsync(int workspaceId, string currentUserId);
+        Task<ServiceResult<WorkspaceDetailsViewModel>> GetWorkspaceDetailsAsync(int workspaceId, string currentUserId);
 
         Task<ServiceResult> AddMemberAsync(AddWorkspaceMemberDto dto, string currentUserId);
         Task<ServiceResult> CreateMemberAsync(CreateWorkspaceMemberDto dto, string currentUserId);

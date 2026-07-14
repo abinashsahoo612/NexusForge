@@ -1,6 +1,7 @@
 using TaskManagementSystem.Enums.Workspaces;
 using TaskManagementSystem.DTOs.Account;
 using TaskManagementSystem.DTOs.Projects;
+using TaskManagementSystem.DTOs.Task;
 
 namespace TaskManagementSystem.DTOs.Workspaces
 {
@@ -12,20 +13,15 @@ namespace TaskManagementSystem.DTOs.Workspaces
 
         public string? Description { get; set; }
 
+        public int MemberCount { get; set; }
+
         public bool IsActive { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
-        public int MemberCount { get; set; }
-
-        public List<WorkspaceMemberDto> Members { get; set; } = new();
-
         public MembershipPolicy MembershipPolicy { get; set; }
 
         public WorkspaceRole MyRole { get; set; }
-
-        public List<UserListDto> AllUser {get; set;} = new();
-        public List<ProjectListItemDto> ProjectList {get; set;} = new();
 
     }
 }

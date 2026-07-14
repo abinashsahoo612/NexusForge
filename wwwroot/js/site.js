@@ -57,6 +57,76 @@
         });
     });
 
+    $("#saveTask").click(function () {
+        const projectId = $("#ProjectId").val();
+        const title = $("#Title").val().trim();
+        const description = $("textarea[name='Description']").val().trim();
+        const status = $("#Status").val();
+        const priority = $("#Priority").val();
+        if (projectId === "") {
+            Swal.fire({
+                icon: "warning",
+                title: "Validation",
+                text: "Please select a project."
+            });
+            return;
+        }
+
+        if (title === "") {
+            Swal.fire({
+                icon: "warning",
+                title: "Validation",
+                text: "Task title is required."
+            });
+            return;
+        }
+
+        if (description === "") {
+            Swal.fire({
+                icon: "warning",
+                title: "Validation",
+                text: "Description is required."
+            });
+            return;
+        }
+        
+        // if (status === "") {
+        //     Swal.fire({
+        //         icon: "warning",
+        //         title: "Validation",
+        //         text: "Please select a status."
+        //     });
+        //     return;
+        // }
+
+        // if (priority === "") {
+        //     Swal.fire({
+        //         icon: "warning",
+        //         title: "Validation",
+        //         text: "Please select a priority."
+        //     });
+        //     return;
+        // }
+
+        Swal.fire({
+            title: "Create Task?",
+            text: "Do you want to create this task?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Create",
+            confirmButtonColor: "#198754",
+            cancelButtonColor: "#6c757d"
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                $("#addTaskForm").submit();
+
+            }
+
+        });
+    });
+
     function addMember() {
 
         const workspaceId = $("#WorkspaceId").val();
@@ -241,7 +311,8 @@
         responsive: true,
 
         language: {
-            search: "Search:"
+            search: "Search:",
+            emptyTable: "No record found."
         }
 
     });
@@ -261,11 +332,33 @@
         responsive: true,
 
         language: {
-            search: "Search:"
+            search: "Search:",
+            emptyTable: "No record found."
         }
 
     });
 
+    $("#unassignedTaskListTable").DataTable({
+
+        pageLength: 10,
+
+        ordering: true,
+
+        searching: true,
+
+        lengthChange: false,
+
+        info: true,
+
+        responsive: true,
+
+        language: {
+            search: "Search:",
+            emptyTable: "No record found."
+        }
+
+    });
+    
     function createProject() {
 
         const workspaceId = $("#WorkspaceId").val();

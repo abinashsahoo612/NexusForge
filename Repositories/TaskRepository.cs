@@ -20,7 +20,7 @@ namespace TaskManagementSystem.Repositories
         public async Task<IEnumerable<TaskItem>> GetAllByUserIdAsync(string userId)
         {
             return await _context.Tasks
-                .Where(t => t.UserId == userId)
+                .Where(t => t.AssignedToUserId == userId)
                 .ToListAsync();
         }
 
@@ -50,7 +50,7 @@ namespace TaskManagementSystem.Repositories
         public async Task<DashboardDto> GetDashboardDataAsync(string userId)
         {
             var tasks = await _context.Tasks
-                .Where(t => t.UserId == userId)
+                .Where(t => t.AssignedToUserId == userId)
                 .ToListAsync();
 
             return new DashboardDto

@@ -13,13 +13,16 @@ namespace TaskManagementSystem.Controllers
     public class WorkspaceController : Controller
     {
         private readonly IWorkspaceService _workspaceService;
+        private readonly ITaskService _taskService;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public WorkspaceController(
             IWorkspaceService workspaceService,
+            ITaskService taskService,
             UserManager<ApplicationUser> userManager)
         {
             _workspaceService = workspaceService;
+            _taskService = taskService;
             _userManager = userManager;
         }
 
@@ -41,7 +44,12 @@ namespace TaskManagementSystem.Controllers
             if (user == null)
                 return Challenge();
 
-            await _workspaceService.CreateWorkspaceAsync(dto, user.Id);
+            var result = await _workspaceService.CreateWorkspaceAsync(dto, user.Id);
+
+            if (!result.Success)
+            {
+                return NotFound();
+            }
 
             return RedirectToAction(nameof(Index));
         }
@@ -53,9 +61,14 @@ namespace TaskManagementSystem.Controllers
             if (user == null)
                 return Challenge();
 
-            var workspaces = await _workspaceService.GetUserWorkspacesAsync(user.Id);
+            var result = await _workspaceService.GetUserWorkspacesAsync(user.Id);
 
-            return View(workspaces);
+            if (!result.Success)
+            {
+                return NotFound();
+            }
+
+            return View(result.Data);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -65,12 +78,14 @@ namespace TaskManagementSystem.Controllers
             if (user == null)
                 return Challenge();
 
-            var workspace = await _workspaceService.GetWorkspaceDetailsAsync(id, user.Id);
+            var result = await _workspaceService.GetWorkspaceDetailsAsync(id, user.Id);
 
-            if (workspace == null)
+            if (!result.Success)
+            {
                 return NotFound();
+            }
 
-            return View(workspace);
+            return View(result.Data);
         }
 
         [HttpPost]
@@ -122,6 +137,29 @@ namespace TaskManagementSystem.Controllers
             var result = await _workspaceService.GetTasksByWorkspaceIdAsync(WorkspaceId);
 
             return Json(result);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateTask(CreateTaskDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                // reload your page/view model
+            }
+            var user = await _userManager.GetUserAsync(User);
+
+            var result = await _taskService.CreateTaskAsync(dto, user.Id);
+
+            if (!result.Success)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction("Details", "Workspace", new { id = dto.WorkspaceId });
+            }
+
+            TempData["Success"] = result.Message;
+
+            return RedirectToAction("Details", "Workspace", new { id = dto.WorkspaceId });
         }
     }
 }

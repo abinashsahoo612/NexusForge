@@ -34,47 +34,35 @@
             </thead>
 
             <tbody>
-                @if (Model.Any())
-                {
-                    @foreach (var projectItem in Model)
-                    {
-                        <tr>
-
-                            <td>@projectItem.Name</td>
-
-                            <td>@projectItem.Description</td>
-
-                            <td>@projectItem.MyRole</td>
-
-                            <td>
-
-                                @if (projectItem.IsActive)
-                                {
-                                    <span class="badge bg-success">
-                                        Active
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger">
-                                        Inactive
-                                    </span>
-                                }
-
-                            </td>
-
-                        </tr>
-                    }
-                } 
-                else
+                @foreach (var projectItem in Model)
                 {
                     <tr>
-                        <td colspan="7" class="text-center">
-                            No projects found.
+
+                        <td>@projectItem.Name</td>
+
+                        <td>@projectItem.Description</td>
+
+                        <td>@projectItem.MyRole</td>
+
+                        <td>
+
+                            @if (projectItem.IsActive)
+                            {
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">
+                                    Inactive
+                                </span>
+                            }
+
                         </td>
+
                     </tr>
                 }
-
             </tbody>
 
         </table>

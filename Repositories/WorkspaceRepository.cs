@@ -75,70 +75,29 @@ namespace TaskManagementSystem.Repositories
                     x.UserId == userId &&
                     x.IsActive);
         }
-        public async Task<IEnumerable<WorkspaceListItemDto>> GetUserWorkspacesAsync(string userId)
+        public async Task<IEnumerable<WorkspaceMember>> GetUserWorkspacesAsync(string userId)
         {
             return await _context.WorkspaceMembers
+                .Include(wm => wm.Workspace)
+                    .ThenInclude(w => w.Members)
                 .Where(wm => wm.UserId == userId && wm.IsActive)
-                .Select(wm => new WorkspaceListItemDto
-                {
-                    Id = wm.WorkspaceId,
-                    Name = wm.Workspace.Name,
-                    Description = wm.Workspace.Description,
-                    MyRole = wm.Role,
-                    MembershipPolicy = wm.Workspace.MembershipPolicy,
-                    IsActive = wm.Workspace.IsActive,
-                    MemberCount = wm.Workspace.Members.Count(m => m.IsActive)
-                })
-                .OrderBy(w => w.Name)
+                .OrderBy(wm => wm.Workspace.Name)
                 .ToListAsync();
         }
 
-        public async Task<WorkspaceDetailsDto?> GetWorkspaceDetailsAsync(int workspaceId, string userId)
+        public async Task<Workspace?> GetWorkspaceDetailsAsync(int workspaceId, string currentUserId)
         {
-            var Users = await _userManager
-                        .Users
-                        .Select(u => new UserListDto
-                        {
-                            Id = u.Id,
-                            FullName = u.FullName,
-                            Email = u.Email!
-                        }).ToListAsync();
-            return await _context.WorkspaceMembers
-                .Where(wm =>
-                    wm.WorkspaceId == workspaceId &&
-                    wm.UserId == userId &&
-                    wm.IsActive)
-                .Select(wm => new WorkspaceDetailsDto
-                {
-                    Id = wm.Workspace.Id,
-                    Name = wm.Workspace.Name,
-                    Description = wm.Workspace.Description,
-                    MembershipPolicy = wm.Workspace.MembershipPolicy,
-                    IsActive = wm.Workspace.IsActive,
-                    CreatedAt = wm.Workspace.CreatedAt,
-                    MemberCount = wm.Workspace.Members.Count(m => m.IsActive),
-                    Members = wm.Workspace.Members
-                                .Where(m => m.IsActive)
-                                .Select(m => new WorkspaceMemberDto
-                                {
-                                    FullName = m.User.FullName,
-                                    Email = m.User.Email!,
-                                    Role = m.Role,
-                                    JoinedAt = m.JoinedAt,
-                                    IsActive = m.IsActive
-                                })
-                                .ToList(),
-                    ProjectList = wm.Workspace.Projects.Select(p => new ProjectListItemDto
-                                    {
-                                        Name = p.Name,
-                                        Description = p.Description,
-                                        IsActive = p.IsActive,
-                                        MyRole = wm.Role,
-                                    }).ToList(),
-                    MyRole = wm.Role,
-                    AllUser = Users
-                })
-                .FirstOrDefaultAsync();
+            return await _context.Workspaces
+                    .Include(w => w.Members)
+                        .ThenInclude(m => m.User)
+                    .Include(w => w.Projects)
+                        .ThenInclude(p => p.Tasks)
+                    .FirstOrDefaultAsync(w =>
+                        w.Id == workspaceId &&
+                        w.Members.Any(m =>
+                            m.UserId == currentUserId &&
+                            m.IsActive));
         }
+
     }
 }

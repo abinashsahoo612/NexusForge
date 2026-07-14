@@ -15,7 +15,7 @@ public interface IWorkspaceRepository
 
     Task<bool> IsMemberOfAnotherWorkspaceAsync(string userId);
 
-    Task<IEnumerable<WorkspaceListItemDto>> GetUserWorkspacesAsync(string userId);
+    Task<IEnumerable<WorkspaceMember>> GetUserWorkspacesAsync(string userId);
 
-    Task<WorkspaceDetailsDto?> GetWorkspaceDetailsAsync(int workspaceId, string userId);
+    Task<Workspace?> GetWorkspaceDetailsAsync(int workspaceId, string userId);
 }

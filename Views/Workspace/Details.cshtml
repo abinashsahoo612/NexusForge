@@ -1,4 +1,4 @@
-@model TaskManagementSystem.DTOs.Workspaces.WorkspaceDetailsDto
+@model TaskManagementSystem.ViewModels.Workspace.WorkspaceDetailsViewModel
 
 @{
     ViewData["Title"] = "Workspace Details";
@@ -15,19 +15,23 @@
     </div>
     <div class="row justify-content-between ">
         <div class="col-xl-4 col-lg-4">
-            <partial name="Partials/_WorkspaceInfo" model="Model" />
+            <partial name="Partials/_WorkspaceInfo" model="Model.WorkspaceInfo" />
         </div>
         <div class="col-xl-8 col-lg-8">
-            <partial name="Partials/_AddMember" model="Model.AllUser"/>
+            <partial name="Partials/_AddMember" model="Model.MemberSection.Users"/>
         </div>
     </div>
 
     <hr class="my-4" />
 
-    <partial name="Partials/_WorkspaceMembers" model="Model.Members" />
+    <partial name="Partials/_WorkspaceMembers" model="Model.MemberSection.Members" />
 
     <hr class="my-4" />
     
-    <partial name="Partials/_ProjectList" model="Model.ProjectList" />
+    <partial name="Partials/_ProjectList" model="Model.ProjectSection.Projects" />
+
+    <hr class="my-4" />
+    
+    <partial name="Partials/_UnassignedTaskList" model="Model.TaskSection" />
 
 </div>

@@ -4,11 +4,15 @@ using TaskManagementSystem.Common.Results;
 using TaskManagementSystem.Contracts.Repositories;
 using TaskManagementSystem.Contracts.Services;
 using TaskManagementSystem.Data;
+using TaskManagementSystem.DTOs.Account;
+using TaskManagementSystem.DTOs.Projects;
 using TaskManagementSystem.DTOs.Task;
 using TaskManagementSystem.DTOs.Workspaces;
 using TaskManagementSystem.Enums.Workspaces;
 using TaskManagementSystem.Models.Identity;
 using TaskManagementSystem.Models.Workspaces;
+using TaskManagementSystem.ViewModels.Task;
+using TaskManagementSystem.ViewModels.Workspace;
 
 namespace TaskManagementSystem.Services
 {
@@ -31,7 +35,7 @@ namespace TaskManagementSystem.Services
             _userManager = userManager;
         }
 
-        public async Task<WorkspaceDto> CreateWorkspaceAsync(
+        public async Task<ServiceResult> CreateWorkspaceAsync(
             CreateWorkspaceDto dto,
             string currentUserId)
         {
@@ -70,16 +74,17 @@ namespace TaskManagementSystem.Services
 
                 await transaction.CommitAsync();
 
-                return new WorkspaceDto
-                {
-                    Id = workspace.Id,
-                    Name = workspace.Name,
-                    Description = workspace.Description,
-                    MembershipPolicy = workspace.MembershipPolicy,
-                    CreatedAt = workspace.CreatedAt,
-                    // UpdatedAt = workspace.UpdatedAt,
-                    IsActive = workspace.IsActive
-                };
+                var responseDto =  new WorkspaceDto
+                    {
+                        Id = workspace.Id,
+                        Name = workspace.Name,
+                        Description = workspace.Description,
+                        MembershipPolicy = workspace.MembershipPolicy,
+                        CreatedAt = workspace.CreatedAt,
+                        // UpdatedAt = workspace.UpdatedAt,
+                        IsActive = workspace.IsActive
+                    };
+                return ServiceResult.Ok("Workspace created successfully.");
             }
             catch(Exception e)
             {
@@ -88,9 +93,24 @@ namespace TaskManagementSystem.Services
             }
         }
 
-        public async Task<IEnumerable<WorkspaceListItemDto>> GetUserWorkspacesAsync(string userId)
+        public async Task<ServiceResult<IEnumerable<WorkspaceListItemDto>>> GetUserWorkspacesAsync(string userId)
         {
-            return await _workspaceRepository.GetUserWorkspacesAsync(userId);
+            var workspaceMembers = await _workspaceRepository
+                .GetUserWorkspacesAsync(userId);
+
+            var dto = workspaceMembers.Select(wm => new WorkspaceListItemDto
+            {
+                Id = wm.WorkspaceId,
+                Name = wm.Workspace.Name,
+                Description = wm.Workspace.Description,
+                MyRole = wm.Role,
+                MembershipPolicy = wm.Workspace.MembershipPolicy,
+                IsActive = wm.Workspace.IsActive,
+                MemberCount = wm.Workspace.Members.Count(m => m.IsActive)
+            }).ToList();
+
+            return ServiceResult<IEnumerable<WorkspaceListItemDto>>
+                .Ok(dto, "Workspaces loaded successfully.");
         }
 
         public async Task<WorkspaceDto?> GetWorkspaceByIdAsync(int workspaceId)
@@ -104,9 +124,118 @@ namespace TaskManagementSystem.Services
             throw new NotImplementedException();
         }
 
-        public async Task<WorkspaceDetailsDto?> GetWorkspaceDetailsAsync(int workspaceId, string userId)
+        public async Task<ServiceResult<WorkspaceDetailsViewModel>> GetWorkspaceDetailsAsync(
+            int workspaceId,
+            string currentUserId)
         {
-            return await _workspaceRepository.GetWorkspaceDetailsAsync(workspaceId, userId);
+            var workspace = await _workspaceRepository
+                .GetWorkspaceDetailsAsync(workspaceId, currentUserId);
+
+            if (workspace == null)
+            {
+                return ServiceResult<WorkspaceDetailsViewModel>.Fail(
+                    "Workspace not found or you don't have permission.");
+            }
+
+            var currentMember = workspace.Members
+                .First(x => x.UserId == currentUserId);
+
+            var users = await _userManager.Users
+                .Select(u => new UserListDto
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email!
+                })
+                .ToListAsync();
+            var workspaceDto = new WorkspaceDetailsDto
+            {
+                Id = workspace.Id,
+                Name = workspace.Name,
+                Description = workspace.Description,
+                MembershipPolicy = workspace.MembershipPolicy,
+                IsActive = workspace.IsActive,
+                CreatedAt = workspace.CreatedAt,
+                MyRole = currentMember.Role,
+                MemberCount = workspace.Members.Count(m => m.IsActive),
+            };
+
+            var taskSection = new TaskSectionViewModel
+            {
+                Users = users,
+
+                UnassignedTasks = workspace.Projects
+                    .SelectMany(p => p.Tasks)
+                    .Where(t => t.AssignedToUserId == null)
+                    .Select(t => new UnassignedTaskListDto
+                    {
+                        Id = t.Id,
+                        Title = t.Title,
+                        Description = t.Description,
+                        Status = t.Status,
+                        Priority = t.Priority,
+                        CreatedBy = t.CreatedByUser.FullName
+                    })
+                    .ToList(),
+                
+                Projects = workspace.Projects
+                    .Select(p => new ProjectDropdownDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name
+                    })
+                    .ToList(),
+            };
+
+            var projectSection = new ProjectSectionViewModel
+            {
+                Projects = workspace.Projects
+                        .Select(p => new ProjectListItemDto
+                        {
+                            Id = p.Id,
+                            Name = p.Name,
+                            Description = p.Description,
+                            IsActive = p.IsActive,
+                            MyRole = currentMember.Role
+                        })
+                        .ToList(),
+                ProjectDropdown = workspace.Projects
+                    .Select(p => new ProjectDropdownDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name
+                    })
+                    .ToList(),
+            };
+
+            var memberSection = new MemberSectionViewModel
+            {
+                MemberCount = workspace.Members.Count(m => m.IsActive),
+                Members = workspace.Members
+                    .Where(m => m.IsActive)
+                    .Select(m => new WorkspaceMemberDto
+                    {
+                        FullName = m.User.FullName,
+                        Email = m.User.Email!,
+                        Role = m.Role,
+                        JoinedAt = m.JoinedAt,
+                        IsActive = m.IsActive
+                    })
+                    .ToList(),
+                Users = users
+            };
+
+            var vm = new WorkspaceDetailsViewModel
+            {
+                WorkspaceInfo = workspaceDto,
+                TaskSection = taskSection,
+                ProjectSection = projectSection,
+                MemberSection = memberSection,
+            };
+
+            return ServiceResult<WorkspaceDetailsViewModel>.Ok(
+                vm,
+                "Workspace loaded successfully.");
         }
 
         public async Task<ServiceResult> AddMemberAsync(AddWorkspaceMemberDto dto, string currentUserId)

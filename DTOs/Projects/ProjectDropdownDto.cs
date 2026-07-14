@@ -1,5 +1,3 @@
-
-
 namespace TaskManagementSystem.DTOs.Projects
 {
     public class ProjectDropdownDto
