@@ -47,7 +47,7 @@
 }
 
 /* Button */
-/* .btn-primary {
+.auth-btn-primary {
     width: 100%;
     padding: 12px;
     background: white;
@@ -58,9 +58,9 @@
     font-weight: bold;
 }
 
-.btn-primary:hover {
+.auth-btn-primary:hover {
     background: #f3f4f6;
-} */
+}
 
 /* Footer text */
 /* .auth-footer {
@@ -136,4 +136,23 @@
 
 .form-label {
     font-weight: 600;
+}
+
+/* Forces the dropdown menu to stay contained on the screen */
+.custom-hover-dropdown .dropdown-menu-end {
+    right: 0 !important;
+    left: auto !important;
+    transform: none !important; /* Prevents Bootstrap's Popper.js from shifting it right */
+}
+
+/* Triggers the dropdown visibility on hover for screens larger than mobile */
+@media (min-width: 576px) {
+    .custom-hover-dropdown:hover .dropdown-menu {
+        display: block;
+    }
+}
+
+/* Removes the default downward caret triangle from the toggle link */
+.no-caret::after {
+    display: none !important;
 }

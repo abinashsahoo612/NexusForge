@@ -29,6 +29,7 @@
                     <th>Status</th>
                     <th>Priority</th>
                     <th>Created By</th>
+                    <th>Action</th>
                 </tr>
 
             </thead>
@@ -47,6 +48,13 @@
                         <td>@unassignedTaskItem.Priority</td>
 
                         <td>@unassignedTaskItem.CreatedBy</td>
+                        <td>
+                            <a asp-action="Edit"
+                            asp-route-id="@unassignedTaskItem.Id"
+                            class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+                        </td>
 
                     </tr>
                 }
