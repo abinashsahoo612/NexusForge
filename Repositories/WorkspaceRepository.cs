@@ -27,10 +27,9 @@ namespace TaskManagementSystem.Repositories
             return workspace;
         }
 
-        public Task UpdateAsync(Workspace workspace)
+        public async Task UpdateAsync()
         {
-            _context.Workspaces.Update(workspace);
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Workspace?> GetByIdAsync(int workspaceId)

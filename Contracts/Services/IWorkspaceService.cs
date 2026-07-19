@@ -14,10 +14,10 @@ namespace TaskManagementSystem.Contracts.Services
         Task<ServiceResult<IEnumerable<WorkspaceListItemDto>>> GetUserWorkspacesAsync(
             string userId);
 
-        Task<WorkspaceDto?> GetWorkspaceByIdAsync(
+        Task<ServiceResult<WorkspaceDto>> GetWorkspaceByIdAsync(
             int workspaceId);
 
-        Task<bool> UpdateWorkspaceAsync(
+        Task<ServiceResult> UpdateWorkspaceAsync(
             UpdateWorkspaceDto dto,
             string currentUserId);
 

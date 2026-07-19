@@ -86,7 +86,7 @@ namespace TaskManagementSystem.Services
                     };
                 return ServiceResult.Ok("Workspace created successfully.");
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 await transaction.RollbackAsync();
                 throw;
@@ -113,15 +113,42 @@ namespace TaskManagementSystem.Services
                 .Ok(dto, "Workspaces loaded successfully.");
         }
 
-        public async Task<WorkspaceDto?> GetWorkspaceByIdAsync(int workspaceId)
+        public async Task<ServiceResult<WorkspaceDto>> GetWorkspaceByIdAsync(int workspaceId)
         {
-            // return await _workspaceRepository.GetByIdAsync(workspaceId);
-            throw new NotImplementedException();
+            var data =  await _workspaceRepository.GetByIdAsync(workspaceId);
+            var dto = new WorkspaceDto
+            {
+                Id = data.Id,
+                Name = data.Name,
+                Description = data.Description,
+                MembershipPolicy = data.MembershipPolicy
+            };
+
+            return ServiceResult<WorkspaceDto>.Ok(dto, "Workspace fetched successfully");
+            // throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateWorkspaceAsync(UpdateWorkspaceDto dto, string currentUserId)
+        public async Task<ServiceResult> UpdateWorkspaceAsync(UpdateWorkspaceDto dto, string currentUserId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var workspace = await _workspaceRepository.GetByIdAsync(dto.Id);
+
+                if (workspace == null)
+                    return ServiceResult.Fail("Workspace not found.");
+
+                workspace.Name = dto.Name;
+                workspace.Description = dto.Description;
+                workspace.MembershipPolicy = dto.MembershipPolicy;
+
+                await _workspaceRepository.UpdateAsync();
+
+                return ServiceResult.Ok("Workspace updated successfully.");
+            }
+            catch (Exception)
+            {
+                return ServiceResult.Fail("Unable to update workspace.");
+            }
         }
 
         public async Task<ServiceResult<WorkspaceDetailsViewModel>> GetWorkspaceDetailsAsync(

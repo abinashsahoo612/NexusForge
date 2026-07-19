@@ -127,6 +127,33 @@
         });
     });
 
+    $("#workspaceEdit").click(function (e) {
+        const workspaceId = $(this).data('id');
+
+            $.ajax({
+
+            url: "/Workspace/Edit/" + workspaceId,
+
+            type: "GET",
+            success: function (response) {
+
+                $("#workspaceModalContent").html(response);
+
+                $("#workspaceModal").modal("show");
+
+            },
+            error: function () {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Server Error",
+                    text: "Something went wrong."
+                });
+
+            }
+        });
+    });
+
     function addMember() {
 
         const workspaceId = $("#WorkspaceId").val();
@@ -447,5 +474,65 @@
         });
 
     }
+
+    $(document).on("click", "#updateWorkspace", function () {
+        const form = $("#editWorkspaceForm");
+
+        $.ajax({
+
+            url: form.attr("action"),
+            type: "POST",
+            data: form.serialize(),
+
+            success: function (response) {
+
+                // Validation failed
+                if (response.status != "success") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Ooops...",
+                        text: 'Invali inputs'
+                    })
+                }
+
+                // Success
+                Swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: response.message
+                }).then(() => {
+
+                    location.reload();
+
+                });
+
+            },
+
+            error: function (xhr) {
+
+                if (xhr.status === 400 && xhr.responseJSON) {
+
+                    const errors = xhr.responseJSON.errors;
+
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Validation Error",
+                        html: errors.join("<br>")
+                    });
+
+                    return;
+                }
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Something went wrong."
+                });
+
+            }
+
+        });
+
+    });
     // WorkspaceJS end
 });

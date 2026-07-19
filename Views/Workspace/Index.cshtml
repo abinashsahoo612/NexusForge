@@ -61,11 +61,11 @@
 
                     @if (workspace.MyRole == WorkspaceRole.Admin)
                     {
-                        <a asp-action="Edit"
-                        asp-route-id="@workspace.Id"
+                        <button id="workspaceEdit"
+                        data-id = "@workspace.Id"
                         class="btn btn-warning btn-sm">
                             Edit
-                        </a>
+                        </button>
                     }
 
                 </td>
@@ -85,3 +85,15 @@
     </tbody>
 
 </table>
+
+<div class="modal fade" id="workspaceModal" tabindex="-1">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content" id="workspaceModalContent">
+
+        </div>
+
+    </div>
+
+</div>

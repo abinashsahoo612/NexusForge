@@ -26,6 +26,23 @@ namespace TaskManagementSystem.Controllers
             _userManager = userManager;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Challenge();
+
+            var result = await _workspaceService.GetUserWorkspacesAsync(user.Id);
+
+            if (!result.Success)
+            {
+                return NotFound();
+            }
+
+            return View(result.Data);
+        }
+
         [HttpGet]
         public IActionResult Create()
         {
@@ -54,21 +71,55 @@ namespace TaskManagementSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Edit(int Id)
         {
+            var result = await _workspaceService.GetWorkspaceByIdAsync(Id);
+            if (!result.Success)
+            {
+                return NotFound();
+            }
+            var dto = new UpdateWorkspaceDto
+            {
+                Id = result.Data.Id,
+                Name = result.Data.Name,
+                Description = result.Data.Description,
+                MembershipPolicy = result.Data.MembershipPolicy
+            };
+            return PartialView("Partials/_EditWorkspace", dto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(UpdateWorkspaceDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new
+                {
+                    success = false,
+                    errors
+                });
+            }
+
             var user = await _userManager.GetUserAsync(User);
 
             if (user == null)
                 return Challenge();
 
-            var result = await _workspaceService.GetUserWorkspacesAsync(user.Id);
+            var result = await _workspaceService.UpdateWorkspaceAsync(dto, user.Id);
 
             if (!result.Success)
             {
                 return NotFound();
             }
 
-            return View(result.Data);
+            return Json(result);
         }
 
         public async Task<IActionResult> Details(int id)
