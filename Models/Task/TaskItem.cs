@@ -34,10 +34,10 @@ namespace TaskManagementSystem.Models.Task
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
 
-        public string AssignedToUserId { get; set; } = string.Empty;
+        public string? AssignedToUserId { get; set; } = string.Empty;
 
         [ForeignKey(nameof(AssignedToUserId))]
-        public ApplicationUser AssignedToUser { get; set; } = null!;
+        public ApplicationUser? AssignedToUser { get; set; } = null!;
 
         [Required]
         public string CreatedByUserId { get; set; } = string.Empty;

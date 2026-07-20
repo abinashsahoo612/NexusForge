@@ -127,6 +127,32 @@
         });
     });
 
+    $("#workspaceCreate").click(function (e) {
+
+            $.ajax({
+
+            url: "/Workspace/Create/",
+
+            type: "GET",
+            success: function (response) {
+
+                $("#workspaceModalContent").html(response);
+
+                $("#workspaceModal").modal("show");
+
+            },
+            error: function () {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Server Error",
+                    text: "Something went wrong."
+                });
+
+            }
+        });
+    });
+
     $("#workspaceEdit").click(function (e) {
         const workspaceId = $(this).data('id');
 
@@ -140,6 +166,58 @@
                 $("#workspaceModalContent").html(response);
 
                 $("#workspaceModal").modal("show");
+
+            },
+            error: function () {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Server Error",
+                    text: "Something went wrong."
+                });
+
+            }
+        });
+    });
+
+    $(document).on("click", "#projectEdit", function () {
+        const projectId = $(this).data('id');
+
+            $.ajax({
+
+            url: "/Project/Edit/" + projectId,
+
+            type: "GET",
+            success: function (response) {
+
+                $("#commonModalContent").html(response);
+                $("#commonModal").modal("show");
+
+            },
+            error: function () {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Server Error",
+                    text: "Something went wrong."
+                });
+
+            }
+        });
+    });
+
+    $(document).on("click", "#taskEdit", function () {
+        const taskId = $(this).data('id');
+
+            $.ajax({
+
+            url: "/Task/Edit/" + taskId,
+
+            type: "GET",
+            success: function (response) {
+
+                $("#commonModalContent").html(response);
+                $("#commonModal").modal("show");
 
             },
             error: function () {
@@ -475,34 +553,101 @@
 
     }
 
-    $(document).on("click", "#updateWorkspace", function () {
-        const form = $("#editWorkspaceForm");
+    // $(document).on("click", "#updateWorkspace", function () {
+    //     const form = $("#editWorkspaceForm");
+
+    //     $.ajax({
+
+    //         url: form.attr("action"),
+    //         type: "POST",
+    //         data: form.serialize(),
+
+    //         success: function (response) {
+
+    //             // Validation failed
+    //             if (response.status != "success") {
+    //                 Swal.fire({
+    //                     icon: "error",
+    //                     title: "Ooops...",
+    //                     text: 'Invali inputs'
+    //                 })
+    //             }
+
+    //             // Success
+    //             Swal.fire({
+    //                 icon: "success",
+    //                 title: "Success",
+    //                 text: response.message
+    //             }).then(() => {
+
+    //                 location.reload();
+
+    //             });
+
+    //         },
+
+    //         error: function (xhr) {
+
+    //             if (xhr.status === 400 && xhr.responseJSON) {
+
+    //                 const errors = xhr.responseJSON.errors;
+
+    //                 Swal.fire({
+    //                     icon: "warning",
+    //                     title: "Validation Error",
+    //                     html: errors.join("<br>")
+    //                 });
+
+    //                 return;
+    //             }
+
+    //             Swal.fire({
+    //                 icon: "error",
+    //                 title: "Error",
+    //                 text: "Something went wrong."
+    //             });
+
+    //         }
+
+    //     });
+
+    // });
+
+    function submitAjaxForm(formSelector, successCallback = null) {
+
+        const form = $(formSelector);
 
         $.ajax({
 
             url: form.attr("action"),
-            type: "POST",
+            type: form.attr("method"),
             data: form.serialize(),
 
             success: function (response) {
 
-                // Validation failed
-                if (response.status != "success") {
+                if (!response.success) {
+
                     Swal.fire({
                         icon: "error",
-                        title: "Ooops...",
-                        text: 'Invali inputs'
-                    })
+                        title: "Oops...",
+                        text: response.message
+                    });
+
+                    return;
                 }
 
-                // Success
                 Swal.fire({
                     icon: "success",
                     title: "Success",
                     text: response.message
                 }).then(() => {
 
-                    location.reload();
+                    if (successCallback) {
+                        successCallback(response);
+                    }
+                    else {
+                        location.reload();
+                    }
 
                 });
 
@@ -512,12 +657,10 @@
 
                 if (xhr.status === 400 && xhr.responseJSON) {
 
-                    const errors = xhr.responseJSON.errors;
-
                     Swal.fire({
                         icon: "warning",
                         title: "Validation Error",
-                        html: errors.join("<br>")
+                        html: xhr.responseJSON.errors.join("<br>")
                     });
 
                     return;
@@ -533,6 +676,31 @@
 
         });
 
+    }
+
+    $(document).on("click", "#createWorkspace", function () {
+
+        submitAjaxForm("#createWorkspaceForm");
+
     });
+
+    $(document).on("click", "#updateWorkspace", function () {
+
+        submitAjaxForm("#editWorkspaceForm");
+
+    });
+
+    $(document).on("click", "#updateProject", function () {
+
+        submitAjaxForm("#editProjectForm");
+
+    });
+
+    $(document).on("click", "#updateTask", function () {
+
+        submitAjaxForm("#editTaskForm");
+
+    });
+
     // WorkspaceJS end
 });

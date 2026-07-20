@@ -46,7 +46,7 @@ namespace TaskManagementSystem.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return PartialView("Partials/_CreateWorkspace", new CreateWorkspaceDto());
         }
 
         [HttpPost]
@@ -54,7 +54,17 @@ namespace TaskManagementSystem.Controllers
         public async Task<IActionResult> Create(CreateWorkspaceDto dto)
         {
             if (!ModelState.IsValid)
-                return View(dto);
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new
+                {
+                    errors
+                });
+            }
 
             var user = await _userManager.GetUserAsync(User);
 
@@ -65,10 +75,13 @@ namespace TaskManagementSystem.Controllers
 
             if (!result.Success)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    message = result.Message
+                });
             }
 
-            return RedirectToAction(nameof(Index));
+            return Json(result);
         }
 
         [HttpGet]

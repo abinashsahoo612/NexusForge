@@ -58,13 +58,43 @@ namespace TaskManagementSystem.Controllers
             return View(result.Data);
         }
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int Id)
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Challenge();
+
+            var result = await _projectService.GetProjectDetailsAsync(Id, user.Id);
+            if (!result.Success)
+            {
+                return NotFound();
+            }
+            var dto = new UpdateProjectDto
+            {
+                Id = result.Data.Id,
+                Name = result.Data.Name,
+                Description = result.Data.Description,
+            };
+            return PartialView("Partials/_EditProject", dto);
         }
 
-        public async Task<IActionResult> Edit(UpdateProjectDto dto)
+        public async Task<IActionResult> Update(UpdateProjectDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new
+                {
+                    success = false,
+                    errors
+                });
+            }
+
             var user = await _userManager.GetUserAsync(User);
 
             if (user == null)
@@ -72,10 +102,12 @@ namespace TaskManagementSystem.Controllers
 
             var project = await _projectService.UpdateProjectAsync(dto, user.Id);
 
-            if (project == null)
+            if (!project.Success)
+            {
                 return NotFound();
+            }
 
-            return View(project);
+            return Json(project);
         }
 
         public async Task<IActionResult> Details(int id)

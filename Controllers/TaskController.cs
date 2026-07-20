@@ -49,49 +49,55 @@ namespace TaskManagementSystem.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var task = await _taskService.GetTaskByIdAsync(id);
-
             var user = await _userManager.GetUserAsync(User);
 
-            if (task == null || task.UserId != user.Id)
+            if (user == null)
+                return Challenge();
+
+            var result = await _taskService.GetTaskForEditAsync(id,user.Id);
+            if (!result.Success)
             {
                 return NotFound();
             }
 
-            return View(task); 
+            return PartialView("Partials/_EditTask", result.Data);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, UpdateTaskDto dto)
+        public async Task<IActionResult> Update(UpdateTaskDto dto)
         {
-            if (id != dto.Id)
-                return NotFound();
-
-            var task = await _taskService.GetTaskByIdAsync(id);
-            var user = await _userManager.GetUserAsync(User);
-
-            if (task == null || task.UserId != user.Id)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new
+                {
+                    success = false,
+                    errors
+                });
             }
 
-            if (!ModelState.IsValid)
-                return View(dto);
+            var user = await _userManager.GetUserAsync(User);
 
-            // var dto = new UpdateTaskDto
-            // {
-            //     Id = task.Id,
-            //     Title = task.Title,
-            //     Description = task.Description,
-            //     Status = task.Status,
-            //     Priority = task.Priority,
-            //     DueDate = task.DueDate
-            // };
+            if (user == null)
+                return Challenge();
 
-            await _taskService.UpdateTaskAsync(dto);
+            var result = await _taskService.UpdateTaskAsync(dto, user.Id);
 
-            return RedirectToAction(nameof(Index));
+            if (!result.Success)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = new[] { result.Message }
+                });
+            }
+
+            return Json(result);
         }
     }
 }

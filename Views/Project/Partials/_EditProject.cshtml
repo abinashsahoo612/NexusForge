@@ -1,0 +1,79 @@
+@model TaskManagementSystem.DTOs.Projects.UpdateProjectDto
+
+<div class="modal-header bg-info text-white">
+
+    <h5 class="modal-title fw-semibold">
+        <i class="bi bi-folder2-open me-2"></i>
+        Edit Project
+    </h5>
+
+    <button type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal">
+    </button>
+
+</div>
+
+<form id="editProjectForm"
+      asp-controller="Project"
+      asp-action="Update"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input asp-for="Id" type="hidden" />
+
+    <div class="modal-body">
+
+        <div class="mb-3">
+
+            <label asp-for="Name" class="form-label fw-semibold">
+                <i class="bi bi-folder me-1"></i>
+                Project Name
+            </label>
+
+            <input asp-for="Name"
+                   class="form-control"
+                   placeholder="Enter project name" />
+
+        </div>
+
+        <div class="mb-3">
+
+            <label asp-for="Description" class="form-label fw-semibold">
+                <i class="bi bi-card-text me-1"></i>
+                Description
+            </label>
+
+            <textarea asp-for="Description"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Describe the project"></textarea>
+
+        </div>
+
+    </div>
+
+    <div class="modal-footer bg-light rounded-bottom-4">
+
+        <button type="button"
+                class="btn btn-outline-secondary"
+                data-bs-dismiss="modal">
+
+            <i class="bi bi-x-circle me-1"></i>
+            Cancel
+
+        </button>
+
+        <button type="button"
+                id="updateProject"
+                class="btn btn-info text-white px-4">
+
+            <i class="bi bi-check-circle me-1"></i>
+            Update Project
+
+        </button>
+
+    </div>
+
+</form>

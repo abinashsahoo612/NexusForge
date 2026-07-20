@@ -1,0 +1,81 @@
+@model TaskManagementSystem.DTOs.Workspaces.CreateWorkspaceDto
+
+@using TaskManagementSystem.Enums.Workspaces
+
+<div class="modal-header bg-primary text-white">
+
+    <h5 class="modal-title">
+        Create Workspace
+    </h5>
+
+    <button type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal">
+    </button>
+
+</div>
+
+<form id="createWorkspaceForm"
+      asp-controller="Workspace"
+      asp-action="Create"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="mb-3">
+
+            <label asp-for="Name" class="form-label"></label>
+
+            <input asp-for="Name"
+                   class="form-control" />
+
+        </div>
+
+        <div class="mb-3">
+
+            <label asp-for="Description"
+                   class="form-label"></label>
+
+            <textarea asp-for="Description"
+                      class="form-control"
+                      rows="4"></textarea>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label asp-for="MembershipPolicy"
+                   class="form-label"></label>
+
+            <select asp-for="MembershipPolicy"
+                    asp-items="Html.GetEnumSelectList<MembershipPolicy>()"
+                    class="form-select">
+            </select>
+
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+
+        <button type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal">
+
+            Cancel
+
+        </button>
+
+        <button type="button"
+                id="createWorkspace"
+                class="btn btn-primary">
+
+            Create Workspace
+
+        </button>
+
+    </div>
+
+</form>

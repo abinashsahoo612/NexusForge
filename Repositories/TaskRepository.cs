@@ -26,7 +26,10 @@ namespace TaskManagementSystem.Repositories
 
         public async Task<TaskItem> GetByIdAsync(int id)
         {
-            return await _context.Tasks.FindAsync(id);
+            return await _context.Tasks
+            .Include(t => t.Project)
+            .Include(t => t.AssignedToUser)
+            .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task AddAsync(TaskItem task)
@@ -35,9 +38,8 @@ namespace TaskManagementSystem.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(TaskItem task)
+        public async Task UpdateAsync()
         {
-            _context.Tasks.Update(task);
             await _context.SaveChangesAsync();
         }
 

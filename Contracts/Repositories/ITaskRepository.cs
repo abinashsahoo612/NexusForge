@@ -9,7 +9,7 @@ namespace TaskManagementSystem.Contracts.Repositories
         Task<IEnumerable<TaskItem>> GetAllByUserIdAsync(string userId);
         Task<TaskItem> GetByIdAsync(int id);
         Task AddAsync(TaskItem task);
-        Task UpdateAsync(TaskItem task);
+        Task UpdateAsync();
         Task DeleteAsync(TaskItem task);
         Task<DashboardDto> GetDashboardDataAsync(string userId);
     }

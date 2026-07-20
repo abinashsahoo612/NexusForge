@@ -105,18 +105,44 @@ namespace TaskManagementSystem.Services
             throw new NotImplementedException();
         }
 
-        public Task<ServiceResult> UpdateProjectAsync(
+        public async Task<ServiceResult> UpdateProjectAsync(
             UpdateProjectDto dto,
             string currentUserId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var project = await _projectRepository.GetProjectDetailsAsync(dto.Id);
+
+                if (project == null)
+                    return ServiceResult.Fail("Project not found.");
+
+                project.Name = dto.Name;
+                project.Description = dto.Description;
+
+                await _projectRepository.UpdateAsync();
+
+                return ServiceResult.Ok("Project updated successfully.");
+            }
+            catch (Exception)
+            {
+                return ServiceResult.Fail("Unable to update project.");
+            }
         }
 
         public async Task<ServiceResult<ProjectDetailsDto>> GetProjectDetailsAsync(
             int projectId,
             string currentUserId)
         {
-            throw new NotImplementedException();
+            var data =  await _projectRepository.GetProjectDetailsAsync(projectId);
+            var dto = new ProjectDetailsDto
+            {
+                Id = data.Id,
+                WorkspaceId = data.WorkspaceId,
+                Name = data.Name,
+                Description = data.Description
+            };
+
+            return ServiceResult<ProjectDetailsDto>.Ok(dto, "Workspace fetched successfully");
         }
     }
 }

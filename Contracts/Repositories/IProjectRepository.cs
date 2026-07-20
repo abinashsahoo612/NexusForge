@@ -4,9 +4,9 @@ public interface IProjectRepository
 {
     Task<Project> CreateAsync(Project project);
 
-    Task UpdateAsync(Project project);
+    Task UpdateAsync();
 
-    Task<Project?> GetByIdAsync(int id);
+    Task<Project?> GetProjectDetailsAsync(int id);
 
     Task<IEnumerable<Project>> GetByWorkspaceIdAsync(int workspaceId);
 

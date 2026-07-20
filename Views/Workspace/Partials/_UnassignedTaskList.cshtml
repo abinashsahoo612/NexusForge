@@ -49,8 +49,8 @@
 
                         <td>@unassignedTaskItem.CreatedBy</td>
                         <td>
-                            <a asp-action="Edit"
-                            asp-route-id="@unassignedTaskItem.Id"
+                            <a id="taskEdit"
+                            data-id = "@unassignedTaskItem.Id"
                             class="btn btn-warning btn-sm">
                                 Edit
                             </a>

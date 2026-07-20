@@ -19,13 +19,12 @@ namespace TaskManagementSystem.Repositories
             return project;
         }
 
-        public Task UpdateAsync(Project project)
+        public async Task UpdateAsync()
         {
-            _context.Project.Update(project);
-            return Task.CompletedTask;;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<Project?> GetByIdAsync(int id)
+        public async Task<Project?> GetProjectDetailsAsync(int id)
         {
             return await _context.Project
                 .FirstOrDefaultAsync(x => x.Id == id);
