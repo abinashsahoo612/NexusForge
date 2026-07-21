@@ -20,15 +20,19 @@ namespace TaskManagementSystem.Services
     {
         private readonly IWorkspaceRepository _workspaceRepository;
         private readonly IWorkspaceMemberRepository _workspaceMemberRepository;
+
+        private readonly IProjectRepository _projectRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
 
         public WorkspaceService(
             IWorkspaceRepository workspaceRepository,
             IWorkspaceMemberRepository workspaceMemberRepository,
+            IProjectRepository projectRepository,
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager)
         {
+            _projectRepository = projectRepository;
             _workspaceRepository = workspaceRepository;
             _workspaceMemberRepository = workspaceMemberRepository;
             _context = context;
@@ -359,6 +363,30 @@ namespace TaskManagementSystem.Services
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task<ServiceResult> DeleteWorkspaceAsync(int workspaceId, string currentUserId)
+        {
+            var workspace = await _workspaceRepository.GetByIdAsync(workspaceId);
+
+            if (workspace == null)
+                return ServiceResult.Fail("Workspace not found.");
+
+            // Authorization
+            if (workspace.CreatedByUserId != currentUserId)
+                return ServiceResult.Fail("You are not authorized to delete this workspace.");
+
+            // Business Rule
+            if (await _projectRepository.AnyByWorkspaceIdAsync(workspaceId))
+            {
+                return ServiceResult.Fail(
+                    "This workspace contains projects. Delete all projects before deleting the workspace."
+                );
+            }
+
+            await _workspaceRepository.DeleteAsync(workspace);
+
+            return ServiceResult.Ok("Workspace deleted successfully.");
         }
     
         public async Task<ServiceResult<TaskDto>> GetTasksByWorkspaceIdAsync(int WorkspaceId)

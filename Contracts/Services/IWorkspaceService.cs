@@ -26,5 +26,7 @@ namespace TaskManagementSystem.Contracts.Services
         Task<ServiceResult> AddMemberAsync(AddWorkspaceMemberDto dto, string currentUserId);
         Task<ServiceResult> CreateMemberAsync(CreateWorkspaceMemberDto dto, string currentUserId);
         Task<ServiceResult<TaskDto>> GetTasksByWorkspaceIdAsync(int WorkspaceId);
+
+        Task<ServiceResult> DeleteWorkspaceAsync(int workspaceId, string currentUserId);
     }
 }

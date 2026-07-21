@@ -42,5 +42,17 @@ namespace TaskManagementSystem.Repositories
         {
             return await _context.Project.AnyAsync(x => x.WorkspaceId == workspaceId && x.Name == name);
         }
+
+        public async Task<bool> AnyByWorkspaceIdAsync(int workspaceId)
+        {
+            return await _context.Project
+                .AnyAsync(p => p.WorkspaceId == workspaceId);
+        }
+
+        public async Task DeleteAsync(Project project)
+        {
+            _context.Project.Remove(project);
+            await _context.SaveChangesAsync();
+        }
     }
 }

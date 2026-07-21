@@ -12,5 +12,7 @@ namespace TaskManagementSystem.Contracts.Repositories
         Task UpdateAsync();
         Task DeleteAsync(TaskItem task);
         Task<DashboardDto> GetDashboardDataAsync(string userId);
+
+        Task<bool> AnyByProjectIdAsync(int projectId);
     }
 }

@@ -101,6 +101,12 @@ namespace TaskManagementSystem.Repositories
             };
         }
 
+        public async Task<bool> AnyByProjectIdAsync(int projectId)
+        {
+            return await _context.Tasks
+                .AnyAsync(t => t.ProjectId == projectId);
+        }
+
         // public async Task<IEnumerable<TaskItem>> GetTasksByWorkspaceIdAsync(int WorkspaceId)
         // {
         //     return await _context.Tasks

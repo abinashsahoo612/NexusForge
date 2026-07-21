@@ -32,6 +32,12 @@ namespace TaskManagementSystem.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeleteAsync(Workspace workspace)
+        {
+            _context.Workspaces.Remove(workspace);
+            await _context.SaveChangesAsync();
+        }
+        
         public async Task<Workspace?> GetByIdAsync(int workspaceId)
         {
             return await _context.Workspaces

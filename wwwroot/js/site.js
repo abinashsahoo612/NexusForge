@@ -180,6 +180,112 @@
         });
     });
 
+    $("#workspaceDelete").click(function (e) {
+        const workspaceId = $(this).data('id');
+
+        Swal.fire({
+            title: "Delete Workspace?",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Delete"
+        }).then((result) => {
+
+            if (!result.isConfirmed)
+                return;
+            else
+                $.ajax({
+                    url: "/Workspace/Delete/" + workspaceId,
+                    type: "POST",
+
+                    data: {
+                        __RequestVerificationToken:
+                        $('input[name="__RequestVerificationToken"]').val(),
+                    },
+
+                    success: function (response) {
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Deleted",
+                            text: response.message
+                        }).then(() => {
+
+                            location.reload();
+
+                        });
+
+                    },
+
+                    error: function (xhr) {
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Cannot Delete",
+                            text: xhr.responseJSON.message
+                        });
+
+                    }
+
+                });
+        });
+    });
+
+    $(document).on("click", "#projectDelete", function () {
+        const projectId = $(this).data('id');
+
+        Swal.fire({
+            title: "Delete Project?",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Delete"
+        }).then((result) => {
+
+            if (!result.isConfirmed)
+                return;
+            else
+                $.ajax({
+                    url: "/Project/Delete/" + projectId,
+                    type: "POST",
+
+                    data: {
+                        __RequestVerificationToken:
+                        $('input[name="__RequestVerificationToken"]').val(),
+                    },
+
+                    success: function (response) {
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Deleted",
+                            text: response.message
+                        }).then(() => {
+
+                            location.reload();
+
+                        });
+
+                    },
+
+                    error: function (xhr) {
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Cannot Delete",
+                            text: xhr.responseJSON.message
+                        });
+
+                    }
+
+                });
+        });
+    });
+
     $(document).on("click", "#projectEdit", function () {
         const projectId = $(this).data('id');
 

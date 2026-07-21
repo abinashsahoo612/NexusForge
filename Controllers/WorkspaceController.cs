@@ -104,6 +104,28 @@ namespace TaskManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Challenge();
+
+            var result = await _workspaceService.DeleteWorkspaceAsync(id, user.Id);
+
+            if (!result.Success)
+            {
+                return NotFound(new
+                {
+                    message = result.Message
+                });
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(UpdateWorkspaceDto dto)
         {
             if (!ModelState.IsValid)

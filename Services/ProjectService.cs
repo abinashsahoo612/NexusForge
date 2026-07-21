@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using TaskManagementSystem.Common.Results;
+using TaskManagementSystem.Contracts.Repositories;
 using TaskManagementSystem.Contracts.Services;
 using TaskManagementSystem.Data;
 using TaskManagementSystem.DTOs.Projects;
@@ -14,16 +15,20 @@ namespace TaskManagementSystem.Services
         private readonly IProjectRepository _projectRepository;
 
         private readonly IWorkspaceRepository _workspaceRepository;
+
+        private readonly ITaskRepository _taskRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
 
         public ProjectService(
             IProjectRepository projectRepository,
             IWorkspaceRepository workspaceRepository,
+            ITaskRepository taskRepository,
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager)
         {
             _projectRepository = projectRepository;
+            _taskRepository = taskRepository;
             _workspaceRepository = workspaceRepository;
             _context = context;
             _userManager = userManager;
@@ -143,6 +148,28 @@ namespace TaskManagementSystem.Services
             };
 
             return ServiceResult<ProjectDetailsDto>.Ok(dto, "Workspace fetched successfully");
+        }
+
+        public async Task<ServiceResult> DeleteProjectAsync(int projectId, string currentUserId)
+        {
+            var project = await _projectRepository.GetProjectDetailsAsync(projectId);
+
+            if (project == null)
+                return ServiceResult.Fail("Project not found.");
+
+            if (project.CreatedByUserId != currentUserId)
+                return ServiceResult.Fail("You are not authorized.");
+
+            if (await _taskRepository.AnyByProjectIdAsync(projectId))
+            {
+                return ServiceResult.Fail(
+                    "Delete all tasks before deleting this project."
+                );
+            }
+
+            await _projectRepository.DeleteAsync(project);
+
+            return ServiceResult.Ok("Project deleted successfully.");
         }
     }
 }

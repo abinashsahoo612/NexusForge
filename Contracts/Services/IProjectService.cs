@@ -20,5 +20,7 @@ namespace TaskManagementSystem.Contracts.Services
         Task<ServiceResult<ProjectDetailsDto>> GetProjectDetailsAsync(
             int projectId,
             string currentUserId);
+
+        Task<ServiceResult> DeleteProjectAsync(int projectId, string currentUserId);
     }
 }

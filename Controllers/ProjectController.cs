@@ -110,6 +110,23 @@ namespace TaskManagementSystem.Controllers
             return Json(project);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Challenge();
+
+            var result = await _projectService.DeleteProjectAsync(id, user.Id);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Json(result);
+        }
+
         public async Task<IActionResult> Details(int id)
         {
             var user = await _userManager.GetUserAsync(User);
