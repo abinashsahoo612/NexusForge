@@ -134,5 +134,15 @@ namespace TaskManagementSystem.Controllers
 
             return Json(result);
         }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var result = await _taskService.GetTaskDetailsAsync(id);
+
+            if (!result.Success)
+                return NotFound();
+
+            return View(result.Data);
+        }
     }
 }

@@ -98,6 +98,13 @@
 
                         <td>@unassignedTaskItem.CreatedBy</td>
                         <td>
+                            <a asp-controller="Task"
+                            asp-action="Details"
+                            asp-route-id="@unassignedTaskItem.Id"
+                            class="btn btn-info btn-sm">
+                                View
+                            </a>
+
                             <a id="taskEdit"
                             data-id = "@unassignedTaskItem.Id"
                             class="btn btn-warning btn-sm">

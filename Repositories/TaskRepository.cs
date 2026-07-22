@@ -27,9 +27,11 @@ namespace TaskManagementSystem.Repositories
         public async Task<TaskItem> GetByIdAsync(int id)
         {
             return await _context.Tasks
-            .Include(t => t.Project)
-            .Include(t => t.AssignedToUser)
-            .FirstOrDefaultAsync(t => t.Id == id);
+                        .Include(t => t.Project)
+                            .ThenInclude(p => p.Workspace)
+                        .Include(t => t.AssignedToUser)
+                        .Include(t => t.CreatedByUser)
+                        .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task AddAsync(TaskItem task)

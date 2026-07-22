@@ -1,31 +1,125 @@
-@model IEnumerable<TaskManagementSystem.DTOs.Task.TaskDto>
+@model IEnumerable<TaskManagementSystem.DTOs.Task.TaskListDto>
 
 @{
     ViewData["Title"] = "Tasks";
 }
 
-<h2>My Tasks</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Task</h2>
+    <button id="taskCreate"
+    class="btn btn-info">
+        Create
+    </button>
+</div>
 
-<a asp-action="Create">Create New Task</a>
+<table class="table table-bordered table-striped table-hover">
 
-<table border="1">
-    <thead>
+    <thead class="table-light">
+
         <tr>
             <th>Title</th>
+            <th>Description</th>
+            @* <th>Assignee</th> *@
             <th>Status</th>
             <th>Priority</th>
-            <th>Due Date</th>
+            <th>Created By</th>
+            <th>Action</th>
         </tr>
+
     </thead>
+
     <tbody>
+
+    @if (Model.Any())
+    {
         @foreach (var task in Model)
         {
             <tr>
+
                 <td>@task.Title</td>
-                <td>@task.Status</td>
-                <td>@task.Priority</td>
-                <td>@task.DueDate?.ToShortDateString()</td>
+
+                <td>@task.Description</td>
+
+                @* <td style="width:220px;">
+
+                    <select class="form-select form-select-sm task-assignee"
+                            data-task-id="@task.Id">
+
+                        <option value="">Unassigned</option>
+
+                        @foreach (var user in Model.Users)
+                        {
+                            <option value="@user.Id">
+                                @user.FullName
+                            </option>
+                        }
+
+                    </select>
+
+                </td> *@
+
+                <td style="width:180px;">
+
+                    <select class="form-select form-select-sm task-status"
+                            data-task-id="@task.Id">
+
+                        @foreach (var status in Enum.GetValues<TaskManagementSystem.Enums.Task.TaskStatus>())
+                        {
+                            <option value="@status"
+                                    selected="@(status == task.Status)">
+                                @status
+                            </option>
+                        }
+
+                    </select>
+
+                </td>
+                
+                <td style="width:180px;">
+
+                    <select class="form-select form-select-sm task-priority"
+                            data-task-id="@task.Id">
+
+                        @foreach (var priority in Enum.GetValues<TaskManagementSystem.Enums.Task.TaskPriority>())
+                        {
+                            <option value="@priority"
+                                    selected="@(priority == task.Priority)">
+                                @priority
+                            </option>
+                        }
+
+                    </select>
+
+                </td>
+
+                <td>@task.CreatedBy</td>
+                <td>
+                    <a asp-controller="Task"
+                    asp-action="Details"
+                    asp-route-id="@task.Id"
+                    class="btn btn-info btn-sm">
+                        View
+                    </a>
+
+                    <a id="taskEdit"
+                    data-id = "@task.Id"
+                    class="btn btn-warning btn-sm">
+                        Edit
+                    </a>
+                </td>
+
             </tr>
         }
+    }
+    else
+    {
+        <tr>
+            <td colspan="7" class="text-center">
+                No task found.
+            </td>
+        </tr>
+    }
+
     </tbody>
+
 </table>

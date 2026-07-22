@@ -23,17 +23,19 @@ namespace TaskManagementSystem.Services
             _workspaceRepository = workspaceRepository;
         }
 
-        public async Task<IEnumerable<TaskDto>> GetAllTasksByUserIdAsync(string userId)
+        public async Task<IEnumerable<TaskListDto>> GetAllTasksByUserIdAsync(string userId)
         {
             var tasks = await _taskRepository.GetAllByUserIdAsync(userId);
 
-            return tasks.Select(t => new TaskDto
+            return tasks.Select(t => new TaskListDto
             {
                 Id = t.Id,
                 Title = t.Title,
                 Description = t.Description,
                 Status = t.Status,
                 Priority = t.Priority,
+                AssignedToUserId = t.AssignedToUserId,
+                CreatedBy = t.CreatedByUser.FullName,
                 DueDate = t.DueDate
             });
         }
@@ -204,6 +206,44 @@ namespace TaskManagementSystem.Services
             await _taskRepository.UpdateAsync();
 
             return ServiceResult.Ok("Task updated successfully.");
+        }
+
+        public async Task<ServiceResult<TaskDetailsDto>> GetTaskDetailsAsync(int taskId)
+        {
+            var task = await _taskRepository.GetByIdAsync(taskId);
+
+            if (task == null)
+                return ServiceResult<TaskDetailsDto>.Fail("Task not found.");
+
+            var dto = new TaskDetailsDto
+            {
+                Id = task.Id,
+
+                Title = task.Title,
+                Description = task.Description,
+
+                Status = task.Status,
+                Priority = task.Priority,
+
+                DueDate = task.DueDate,
+
+                AssignedToUserId = task.AssignedToUserId,
+                AssignedToName = task.AssignedToUser?.FullName,
+
+                CreatedByUserId = task.CreatedByUserId,
+                CreatedByName = task.CreatedByUser.FullName,
+
+                ProjectId = task.ProjectId,
+                ProjectName = task.Project.Name,
+
+                WorkspaceId = task.Project.WorkspaceId,
+                WorkspaceName = task.Project.Workspace.Name,
+
+                CreatedAt = task.CreatedAt,
+                UpdatedAt = task.UpdatedAt
+            };
+
+            return ServiceResult<TaskDetailsDto>.Ok(dto);
         }
     }
 }
