@@ -99,5 +99,40 @@ namespace TaskManagementSystem.Controllers
 
             return Json(result);
         }
+        [HttpPost]
+        public async Task<IActionResult> QuickUpdate(QuickUpdateTaskDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new
+                {
+                    success = false,
+                    errors
+                });
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Challenge();
+
+            var result = await _taskService.QuickUpdateTaskAsync(dto, user.Id);
+
+            if (!result.Success)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = new[] { result.Message }
+                });
+            }
+
+            return Json(result);
+        }
     }
 }

@@ -26,6 +26,7 @@
                 <tr>
                     <th>Title</th>
                     <th>Description</th>
+                    <th>Assignee</th>
                     <th>Status</th>
                     <th>Priority</th>
                     <th>Created By</th>
@@ -43,9 +44,57 @@
 
                         <td>@unassignedTaskItem.Description</td>
 
-                        <td>@unassignedTaskItem.Status</td>
+                        <td style="width:220px;">
+
+                            <select class="form-select form-select-sm task-assignee"
+                                    data-task-id="@unassignedTaskItem.Id">
+
+                                <option value="">Unassigned</option>
+
+                                @foreach (var user in Model.Users)
+                                {
+                                    <option value="@user.Id">
+                                        @user.FullName
+                                    </option>
+                                }
+
+                            </select>
+
+                        </td>
+
+                        <td style="width:180px;">
+
+                            <select class="form-select form-select-sm task-status"
+                                    data-task-id="@unassignedTaskItem.Id">
+
+                                @foreach (var status in Enum.GetValues<TaskManagementSystem.Enums.Task.TaskStatus>())
+                                {
+                                    <option value="@status"
+                                            selected="@(status == unassignedTaskItem.Status)">
+                                        @status
+                                    </option>
+                                }
+
+                            </select>
+
+                        </td>
                         
-                        <td>@unassignedTaskItem.Priority</td>
+                        <td style="width:180px;">
+
+                            <select class="form-select form-select-sm task-priority"
+                                    data-task-id="@unassignedTaskItem.Id">
+
+                                @foreach (var priority in Enum.GetValues<TaskManagementSystem.Enums.Task.TaskPriority>())
+                                {
+                                    <option value="@priority"
+                                            selected="@(priority == unassignedTaskItem.Priority)">
+                                        @priority
+                                    </option>
+                                }
+
+                            </select>
+
+                        </td>
 
                         <td>@unassignedTaskItem.CreatedBy</td>
                         <td>

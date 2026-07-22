@@ -193,7 +193,15 @@ namespace TaskManagementSystem.Services
 
             var taskSection = new TaskSectionViewModel
             {
-                Users = users,
+                Users = workspace.Members
+                .Where(m => m.IsActive)
+                .Select(m => new UserListDto
+                {
+                    Id = m.UserId,
+                    FullName = m.User.FullName,
+                    Email = m.User.Email!
+                })
+                .ToList(),
 
                 UnassignedTasks = workspace.Projects
                     .SelectMany(p => p.Tasks)

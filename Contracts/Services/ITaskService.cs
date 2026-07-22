@@ -11,6 +11,8 @@ namespace TaskManagementSystem.Contracts.Services
         Task<ServiceResult<UpdateTaskDto>> GetTaskForEditAsync(int id, string currentUserId);
         Task<ServiceResult> CreateTaskAsync(CreateTaskDto dto, string currentUserId);
         Task<ServiceResult> UpdateTaskAsync(UpdateTaskDto dto,string currentUserId);
+
+        Task<ServiceResult> QuickUpdateTaskAsync(QuickUpdateTaskDto dto,string currentUserId);
         Task DeleteTaskAsync(int id);
         Task<DashboardDto> GetDashboardDataAsync(string userId);
     }

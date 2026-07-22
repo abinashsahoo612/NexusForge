@@ -808,5 +808,176 @@
 
     });
 
+    $(document).on("change", ".task-status", function () {
+
+        const taskId = $(this).data("task-id");
+        const status = $(this).val();
+
+        $.ajax({
+
+            url: "/Task/QuickUpdate",
+            type: "POST",
+
+            data: {
+                __RequestVerificationToken:
+                        $('input[name="__RequestVerificationToken"]').val(),
+
+                TaskId: taskId,
+                Field: "Status",
+                Value: status
+            },
+
+            success: function (response) {
+
+                if (response.success) {
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: response.message
+                    }).then(()=>{
+                        window.location.reload();
+                    });
+                }
+                else {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: response.message
+                    });
+
+                }
+
+            },
+
+            error: function (xhr) {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: xhr.responseJSON.message
+                });
+
+            }
+
+        });
+
+    });
+
+    $(document).on("change", ".task-priority", function () {
+
+        const taskId = $(this).data("task-id");
+        const priority = $(this).val();
+
+        $.ajax({
+
+            url: "/Task/QuickUpdate",
+            type: "POST",
+
+            data: {
+                __RequestVerificationToken:
+                        $('input[name="__RequestVerificationToken"]').val(),
+
+                TaskId: taskId,
+                Field: "Priority",
+                Value: priority
+            },
+
+            success: function (response) {
+
+                if (response.success) {
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: response.message
+                    }).then(()=>{
+                        window.location.reload();
+                    });
+                }
+                else {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: response.message
+                    });
+
+                }
+
+            },
+
+            error: function (xhr) {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: xhr.responseJSON.message
+                });
+
+            }
+
+        });
+
+    });
+
+    $(document).on("change", ".task-assignee", function () {
+
+        const taskId = $(this).data("task-id");
+        const assignee = $(this).val();
+
+        $.ajax({
+
+            url: "/Task/QuickUpdate",
+            type: "POST",
+
+            data: {
+                __RequestVerificationToken:
+                        $('input[name="__RequestVerificationToken"]').val(),
+
+                TaskId: taskId,
+                Field: "AssignedToUserId",
+                Value: assignee
+            },
+
+            success: function (response) {
+
+                if (response.success) {
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: response.message
+                    }).then(()=>{
+                        window.location.reload();
+                    });
+                }
+                else {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: response.message
+                    });
+
+                }
+
+            },
+
+            error: function (xhr) {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: xhr.responseJSON.message
+                });
+
+            }
+
+        });
+
+    });
+
     // WorkspaceJS end
 });

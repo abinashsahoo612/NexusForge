@@ -6,6 +6,7 @@ using TaskManagementSystem.Models.Task;
 using TaskManagementSystem.Common.Results;
 using TaskManagementSystem.DTOs.Projects;
 using TaskManagementSystem.DTOs.Account;
+using TaskManagementSystem.Enums.Task;
 
 namespace TaskManagementSystem.Services
 {
@@ -157,6 +158,52 @@ namespace TaskManagementSystem.Services
         public async Task<DashboardDto> GetDashboardDataAsync(string userId)
         {
             return await _taskRepository.GetDashboardDataAsync(userId);
+        }
+
+        public async Task<ServiceResult> QuickUpdateTaskAsync(
+            QuickUpdateTaskDto dto,
+            string currentUserId)
+        {
+            var task = await _taskRepository.GetByIdAsync(dto.TaskId);
+
+            if (task == null)
+                return ServiceResult.Fail("Task not found.");
+
+            switch (dto.Field)
+            {
+                case "Status":
+
+                    if (!Enum.TryParse<TaskManagementSystem.Enums.Task.TaskStatus>(dto.Value, out var status))
+                        return ServiceResult.Fail("Invalid status.");
+
+                    task.Status = status;
+
+                    break;
+
+                case "AssignedToUserId":
+
+                    task.AssignedToUserId = dto.Value ?? string.Empty;
+
+                    break;
+                
+                case "Priority":
+                    if (!Enum.TryParse<TaskManagementSystem.Enums.Task.TaskPriority>(dto.Value, out var priority))
+                        return ServiceResult.Fail("Invalid status.");
+                    
+                    task.Priority = priority;
+
+                    break;
+
+                default:
+
+                    return ServiceResult.Fail("Invalid field.");
+            }
+
+            task.UpdatedAt = DateTime.UtcNow;
+
+            await _taskRepository.UpdateAsync();
+
+            return ServiceResult.Ok("Task updated successfully.");
         }
     }
 }
