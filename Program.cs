@@ -44,7 +44,7 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
-
+Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
 var app = builder.Build();
 
 
