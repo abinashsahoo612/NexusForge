@@ -23,21 +23,44 @@ namespace TaskManagementSystem.Services
             _workspaceRepository = workspaceRepository;
         }
 
-        public async Task<IEnumerable<TaskListDto>> GetAllTasksByUserIdAsync(string userId)
+        public async Task<ServiceResult<TaskListDto>> GetTaskListAsync(TaskFilterDto filter, string currentUserId)
         {
-            var tasks = await _taskRepository.GetAllByUserIdAsync(userId);
+            var tasks = (await _taskRepository.GetTasksAsync(filter)).ToList();
 
-            return tasks.Select(t => new TaskListDto
+            var dto = new TaskListDto
             {
-                Id = t.Id,
-                Title = t.Title,
-                Description = t.Description,
-                Status = t.Status,
-                Priority = t.Priority,
-                AssignedToUserId = t.AssignedToUserId,
-                CreatedBy = t.CreatedByUser.FullName,
-                DueDate = t.DueDate
-            });
+                WorkspaceId = filter.WorkspaceId,
+                ProjectId = filter.ProjectId,
+
+                TotalTasks = tasks.Count,
+
+                PendingTasks = tasks.Count(t => t.Status == TaskManagementSystem.Enums.Task.TaskStatus.Pending),
+
+                InProgressTasks = tasks.Count(t => t.Status == TaskManagementSystem.Enums.Task.TaskStatus.InProgress),
+
+                CompletedTasks = tasks.Count(t => t.Status == TaskManagementSystem.Enums.Task.TaskStatus.Completed),
+
+                CancelledTasks = tasks.Count(t => t.Status == TaskManagementSystem.Enums.Task.TaskStatus.Cancelled),
+
+                Tasks = tasks.Select(t => new TaskListItemDto
+                {
+                    Id = t.Id,
+
+                    Title = t.Title,
+
+                    Status = t.Status,
+
+                    Priority = t.Priority,
+
+                    DueDate = t.DueDate,
+
+                    AssignedToName = t.AssignedToUser?.FullName,
+
+                    ProjectName = t.Project.Name
+                }).ToList()
+            };
+
+            return ServiceResult<TaskListDto>.Ok(dto);
         }
 
         public async Task<ServiceResult<TaskDto> >GetTaskByIdAsync(int id)

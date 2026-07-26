@@ -1,0 +1,119 @@
+@model TaskManagementSystem.DTOs.Task.TaskListDto;
+
+
+<div class="row g-3">
+
+    <div class="col-lg-3">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header bg-secondary text-white fw-bold">
+
+                Pending
+                <span class="badge bg-light text-dark float-end">
+                    @Model.Tasks.Count(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.Pending)
+                </span>
+
+            </div>
+
+            <div class="card-body bg-light kanban-column">
+
+                @foreach (var task in Model.Tasks.Where(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.Pending))
+                {
+                    <partial name="Partials/_TaskCard" model="task" />
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- In Progress -->
+
+    <div class="col-lg-3">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header bg-primary text-white fw-bold">
+
+                In Progress
+
+                <span class="badge bg-light text-dark float-end">
+                    @Model.Tasks.Count(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.InProgress)
+                </span>
+
+            </div>
+
+            <div class="card-body bg-light kanban-column">
+
+                @foreach (var task in Model.Tasks.Where(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.InProgress))
+                {
+                    <partial name="Partials/_TaskCard" model="task" />
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Completed -->
+
+    <div class="col-lg-3">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header bg-success text-white fw-bold">
+
+                Completed
+
+                <span class="badge bg-light text-dark float-end">
+                    @Model.Tasks.Count(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.Completed)
+                </span>
+
+            </div>
+
+            <div class="card-body bg-light kanban-column">
+
+                @foreach (var task in Model.Tasks.Where(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.Completed))
+                {
+                    <partial name="Partials/_TaskCard" model="task" />
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Cancelled -->
+
+    <div class="col-lg-3">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header bg-danger text-white fw-bold">
+
+                Cancelled
+
+                <span class="badge bg-light text-dark float-end">
+                    @Model.Tasks.Count(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.Cancelled)
+                </span>
+
+            </div>
+
+            <div class="card-body bg-light kanban-column">
+
+                @foreach (var task in Model.Tasks.Where(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.Cancelled))
+                {
+                    <partial name="Partials/_TaskCard" model="task" />
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

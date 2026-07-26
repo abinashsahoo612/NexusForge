@@ -1,0 +1,46 @@
+@model TaskManagementSystem.DTOs.Task.TaskListDto;
+
+@using TaskManagementSystem.Enums.Task;
+
+<table class="table table-bordered">
+
+    <thead>
+
+    <tr>
+
+        <th>Title</th>
+
+        <th>Status</th>
+
+        <th>Priority</th>
+
+        <th>Assigned To</th>
+
+        <th>Due Date</th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    @foreach (var task in Model.Tasks)
+    {
+        <tr>
+
+            <td>@task.Title</td>
+
+            <td>@task.Status</td>
+
+            <td>@task.Priority</td>
+
+            <td>@task.AssignedToName</td>
+
+            <td>@task.DueDate?.ToString("dd MMM yyyy")</td>
+
+        </tr>
+    }
+
+    </tbody>
+
+</table>

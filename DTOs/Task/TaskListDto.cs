@@ -1,21 +1,29 @@
 //To avoid ambigous error between TaskManagementSystem.Enums.TaskStatus and System.Threading.Tasks.TaskStatus
-using TaskStatus = TaskManagementSystem.Enums.Task.TaskStatus;
-using TaskManagementSystem.Enums.Task;
+
 
 namespace TaskManagementSystem.DTOs.Task
 {
     public class TaskListDto
     {
-        public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public int? WorkspaceId { get; set; }
 
-        public string? AssignedToUserId { get; set; }
-        
-        public TaskStatus Status { get; set; }
-        public TaskPriority Priority { get; set; }
+        public int? ProjectId { get; set; }
 
-        public string CreatedBy { get; set; } = string.Empty;
-        public DateTime? DueDate { get; set; }
+        public string? WorkspaceName { get; set; }
+
+        public string? ProjectName { get; set; }
+
+        public int TotalTasks { get; set; }
+
+        public int PendingTasks { get; set; }
+
+        public int InProgressTasks { get; set; }
+
+        public int CompletedTasks { get; set; }
+
+        public int CancelledTasks { get; set; }
+
+        public IEnumerable<TaskListItemDto> Tasks { get; set; }
+            = new List<TaskListItemDto>();
     }
 }

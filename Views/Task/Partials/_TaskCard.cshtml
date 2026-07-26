@@ -1,0 +1,50 @@
+@model TaskManagementSystem.DTOs.Task.TaskListItemDto
+
+<div class="card mb-3 shadow-sm border-0 task-card">
+
+    <div class="card-body">
+
+        <h6 class="fw-bold mb-2">
+            @Model.Title
+        </h6>
+
+        <div class="mb-2">
+
+            @switch (Model.Priority)
+            {
+                case TaskManagementSystem.Enums.Task.TaskPriority.High:
+                    <span class="badge bg-danger">High</span>
+                    break;
+
+                case TaskManagementSystem.Enums.Task.TaskPriority.Medium:
+                    <span class="badge bg-warning text-dark">Medium</span>
+                    break;
+
+                default:
+                    <span class="badge bg-secondary">Low</span>
+                    break;
+            }
+
+        </div>
+
+        <small class="d-block text-muted mb-1">
+
+            <i class="bi bi-person"></i>
+
+            @(string.IsNullOrWhiteSpace(Model.AssignedToName)
+                ? "Unassigned"
+                : Model.AssignedToName)
+
+        </small>
+
+        <small class="text-muted">
+
+            <i class="bi bi-calendar"></i>
+
+            @(Model.DueDate?.ToString("dd MMM yyyy") ?? "No Due Date")
+
+        </small>
+
+    </div>
+
+</div>

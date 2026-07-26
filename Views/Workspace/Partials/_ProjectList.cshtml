@@ -62,6 +62,10 @@
 
                         </td>
                         <td>
+                            <a asp-controller="Task" asp-action="Index" asp-route-id="@projectItem.Id"
+                            class="btn btn-light btn-sm">
+                                View All @projectItem.TasksCount Tasks
+                            </a>
                             <a id="projectEdit"
                             data-id = "@projectItem.Id"
                             class="btn btn-warning btn-sm">

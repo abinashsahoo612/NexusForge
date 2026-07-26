@@ -20,13 +20,25 @@ namespace TaskManagementSystem.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet("Task/Index/{projectId}")]
+        public async Task<IActionResult> Index(int projectId)
         {
             var user = await _userManager.GetUserAsync(User);
 
-            var tasks = await _taskService.GetAllTasksByUserIdAsync(user.Id);
+            if (user == null)
+                return Challenge();
 
-            return View(tasks);
+            var filter = new TaskFilterDto
+            {
+                ProjectId = projectId
+            };
+            
+            var result = await _taskService.GetTaskListAsync(filter, user.Id);
+
+            if (!result.Success)
+                return NotFound();
+
+            return View(result.Data);
         }
 
         public IActionResult Create()

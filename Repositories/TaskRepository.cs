@@ -17,6 +17,33 @@ namespace TaskManagementSystem.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<TaskItem>> GetTasksAsync(TaskFilterDto filter)
+        {
+            var query = _context.Tasks
+                .Include(t => t.Project)
+                    .ThenInclude(p => p.Workspace)
+                .Include(t => t.AssignedToUser)
+                .Include(t => t.CreatedByUser)
+                .AsQueryable();
+
+            if (filter.ProjectId.HasValue)
+                query = query.Where(t => t.ProjectId == filter.ProjectId);
+
+            if (!string.IsNullOrWhiteSpace(filter.AssignedToUserId))
+                query = query.Where(t => t.AssignedToUserId == filter.AssignedToUserId);
+
+            if (!string.IsNullOrWhiteSpace(filter.CreatedByUserId))
+                query = query.Where(t => t.CreatedByUserId == filter.CreatedByUserId);
+
+            if (filter.Status.HasValue)
+                query = query.Where(t => t.Status == filter.Status);
+
+            if (filter.Priority.HasValue)
+                query = query.Where(t => t.Priority == filter.Priority);
+
+            return await query.ToListAsync();
+        }
+
         public async Task<IEnumerable<TaskItem>> GetAllByUserIdAsync(string userId)
         {
             return await _context.Tasks

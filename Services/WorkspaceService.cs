@@ -235,7 +235,8 @@ namespace TaskManagementSystem.Services
                             Name = p.Name,
                             Description = p.Description,
                             IsActive = p.IsActive,
-                            MyRole = currentMember.Role
+                            MyRole = currentMember.Role,
+                            TasksCount = p.Tasks.Count()
                         })
                         .ToList(),
                 ProjectDropdown = workspace.Projects

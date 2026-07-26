@@ -17,5 +17,6 @@ namespace TaskManagementSystem.DTOs.Projects
         public bool IsActive { get; set; }
 
         public int MemberCount { get; set; }
+        public int TasksCount { get; set; }
     }
 }

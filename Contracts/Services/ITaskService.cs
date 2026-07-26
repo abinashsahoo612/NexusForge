@@ -6,7 +6,7 @@ namespace TaskManagementSystem.Contracts.Services
 {
     public interface ITaskService
     {
-        Task<IEnumerable<TaskListDto>> GetAllTasksByUserIdAsync(string userId);
+        Task<ServiceResult<TaskListDto>> GetTaskListAsync(TaskFilterDto filter, string currentUserId);
         Task<ServiceResult<TaskDto>> GetTaskByIdAsync(int id);
         Task<ServiceResult<UpdateTaskDto>> GetTaskForEditAsync(int id, string currentUserId);
         Task<ServiceResult> CreateTaskAsync(CreateTaskDto dto, string currentUserId);
