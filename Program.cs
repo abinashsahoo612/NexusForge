@@ -13,7 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
     );
-
+var cs = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine($"Connection String: [{cs}]");
 // builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Identity
@@ -44,7 +45,6 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
-Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
 var app = builder.Build();
 
 
