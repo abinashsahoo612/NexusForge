@@ -16,7 +16,7 @@
 
             </div>
 
-            <div class="card-body bg-light kanban-column">
+            <div class="card-body bg-light kanban-column" data-status="Pending">
 
                 @foreach (var task in Model.Tasks.Where(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.Pending))
                 {
@@ -45,7 +45,7 @@
 
             </div>
 
-            <div class="card-body bg-light kanban-column">
+            <div class="card-body bg-light kanban-column" data-status="InProgress">
 
                 @foreach (var task in Model.Tasks.Where(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.InProgress))
                 {
@@ -74,7 +74,7 @@
 
             </div>
 
-            <div class="card-body bg-light kanban-column">
+            <div class="card-body bg-light kanban-column" data-status="Completed">
 
                 @foreach (var task in Model.Tasks.Where(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.Completed))
                 {
@@ -103,7 +103,7 @@
 
             </div>
 
-            <div class="card-body bg-light kanban-column">
+            <div class="card-body bg-light kanban-column" data-status="Cancelled">
 
                 @foreach (var task in Model.Tasks.Where(x => x.Status == TaskManagementSystem.Enums.Task.TaskStatus.Cancelled))
                 {

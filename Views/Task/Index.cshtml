@@ -4,17 +4,27 @@
 
 <p>Total : @Model.TotalTasks</p>
 
-<div class="btn-group mb-2">
+<div class="btn-group mb-3">
 
-    <button class="btn btn-primary ">
+    <button id="listViewBtn" class="btn btn-primary">
         <i class="bi bi-list-ul"></i> List
     </button>
 
-    <button class="btn btn-outline-primary active">
+    <button id="boardViewBtn" class="btn btn-outline-primary">
         <i class="bi bi-kanban"></i> Board
     </button>
 
 </div>
 
-<partial name="Partials/_KanbanBoard" model="Model" />
+<div id="listView">
+
+    <partial name="Partials/_ListBoard" model="Model" />
+
+</div>
+
+<div id="boardView" style="display:none;">
+
+    <partial name="Partials/_KanbanBoard" model="Model" />
+
+</div>
 

@@ -979,5 +979,97 @@
 
     });
 
+    $(document).on("click", "#listViewBtn", function () {
+
+        $("#listView").show();
+        $("#boardView").hide();
+
+        $("#listViewBtn")
+            .removeClass("btn-outline-primary")
+            .addClass("btn-primary");
+
+        $("#boardViewBtn")
+            .removeClass("btn-primary")
+            .addClass("btn-outline-primary");
+
+    });
+
+    $(document).on("click", "#boardViewBtn", function () {
+
+        $("#boardView").show();
+        $("#listView").hide();
+
+        $("#boardViewBtn")
+            .removeClass("btn-outline-primary")
+            .addClass("btn-primary");
+
+        $("#listViewBtn")
+            .removeClass("btn-primary")
+            .addClass("btn-outline-primary");
+
+    });
+
+    $(document).ready(function () {
+
+        $(".kanban-column").each(function () {
+
+            new Sortable(this, {
+
+                group: "kanban",
+
+                animation: 150,
+
+                ghostClass: "kanban-ghost",
+
+                // onStart: function () {
+
+                //     console.log("DRAG STARTED");
+
+                // },
+
+                onEnd: function (evt) {
+
+                    // console.log("DRAG ENDED");
+
+                    const taskId = evt.item.dataset.taskId;
+                    const newStatus = evt.to.dataset.status;
+                    
+                    $.ajax({
+
+                        url: "/Task/QuickUpdate",
+                        type: "POST",
+
+                        data: {
+                            __RequestVerificationToken:
+                                    $('input[name="__RequestVerificationToken"]').val(),
+
+                            TaskId: taskId,
+                            Field: "Status",
+                            Value: newStatus
+                        },
+
+                        success: function (response) {
+                            console.log(response.message);
+                        },
+
+                        error: function (xhr) {
+                                
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: xhr.responseJSON.message
+                            });
+
+                        }
+
+                    });
+
+                }
+
+            });
+
+        });
+
+    });
     // WorkspaceJS end
 });
