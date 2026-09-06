@@ -7,6 +7,7 @@ using TaskManagementSystem.Common.Results;
 using TaskManagementSystem.DTOs.Projects;
 using TaskManagementSystem.DTOs.Account;
 using TaskManagementSystem.Enums.Task;
+using TaskManagementSystem.Models.Activity;
 
 namespace TaskManagementSystem.Services
 {
@@ -16,11 +17,14 @@ namespace TaskManagementSystem.Services
         private readonly IProjectRepository _projectRepository;
         private readonly IWorkspaceRepository _workspaceRepository;
 
-        public TaskService(ITaskRepository taskRepository, IProjectRepository projectRepository, IWorkspaceRepository workspaceRepository)
+        private readonly IActivityRepository _activityRepository;
+
+        public TaskService(ITaskRepository taskRepository, IProjectRepository projectRepository, IWorkspaceRepository workspaceRepository,IActivityRepository activityRepository)
         {
             _taskRepository = taskRepository;
             _projectRepository = projectRepository;
             _workspaceRepository = workspaceRepository;
+            _activityRepository = activityRepository;
         }
 
         public async Task<ServiceResult<TaskListDto>> GetTaskListAsync(TaskFilterDto filter, string currentUserId)
@@ -151,6 +155,21 @@ namespace TaskManagementSystem.Services
             var project = await _projectRepository.GetProjectDetailsAsync(dto.ProjectId);
 
             dto.WorkspaceId = project.WorkspaceId;
+
+            var activity = new ActivityLog
+            {
+                UserId = currentUserId,
+                WorkspaceId = dto.WorkspaceId,
+                ProjectId = dto.ProjectId,
+                TaskId = task.Id,
+                EntityType = "Task",
+                Action = "Created",
+                Description = $"Task '{task.Title}' was created.",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _activityRepository.AddAsync(activity);
+
             return ServiceResult<CreateTaskDto>.Ok(dto,"Task created successfully.");
         }
 
@@ -167,6 +186,20 @@ namespace TaskManagementSystem.Services
             task.AssignedToUserId = dto.AssignedToUserId;
 
             await _taskRepository.UpdateAsync();
+
+            var activity = new ActivityLog
+            {
+                UserId = currentUserId,
+                WorkspaceId = dto.WorkspaceId,
+                ProjectId = dto.ProjectId,
+                TaskId = task.Id,
+                EntityType = "Task",
+                Action = "Updated",
+                Description = $"Task '{task.Title}' was Updated.",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _activityRepository.AddAsync(activity);
 
             return ServiceResult.Ok("Task updated successfully.");
         }
@@ -194,39 +227,85 @@ namespace TaskManagementSystem.Services
             if (task == null)
                 return ServiceResult.Fail("Task not found.");
 
+            string description;
+            string oldValue;
+            string newValue;
+
             switch (dto.Field)
             {
                 case "Status":
 
-                    if (!Enum.TryParse<TaskManagementSystem.Enums.Task.TaskStatus>(dto.Value, out var status))
+                    oldValue = task.Status.ToString();
+
+                    if (!Enum.TryParse<TaskManagementSystem.Enums.Task.TaskStatus>(
+                        dto.Value,
+                        out var status))
+                    {
                         return ServiceResult.Fail("Invalid status.");
+                    }
 
                     task.Status = status;
+
+                    newValue = task.Status.ToString();
+
+                    description = $"Status changed from {oldValue} to {newValue}.";
+
+                    break;
+
+                case "Priority":
+
+                    oldValue = task.Priority.ToString();
+
+                    if (!Enum.TryParse<TaskManagementSystem.Enums.Task.TaskPriority>(
+                        dto.Value,
+                        out var priority))
+                    {
+                        return ServiceResult.Fail("Invalid priority.");
+                    }
+
+                    task.Priority = priority;
+
+                    newValue = task.Priority.ToString();
+
+                    description = $"Priority changed from {oldValue} to {newValue}.";
 
                     break;
 
                 case "AssignedToUserId":
 
+                    oldValue = task.AssignedToUserId;
+
                     task.AssignedToUserId = dto.Value ?? string.Empty;
 
-                    break;
-                
-                case "Priority":
-                    if (!Enum.TryParse<TaskManagementSystem.Enums.Task.TaskPriority>(dto.Value, out var priority))
-                        return ServiceResult.Fail("Invalid status.");
-                    
-                    task.Priority = priority;
+                    newValue = task.AssignedToUserId;
+
+                    description = "Task assignee was changed.";
 
                     break;
 
                 default:
-
                     return ServiceResult.Fail("Invalid field.");
             }
 
             task.UpdatedAt = DateTime.UtcNow;
 
             await _taskRepository.UpdateAsync();
+
+            var activity = new ActivityLog
+            {
+                UserId = currentUserId,
+                WorkspaceId = task.Project.WorkspaceId,
+                ProjectId = task.ProjectId,
+                TaskId = task.Id,
+                EntityType = "Task",
+                Action = dto.Field,
+                OldValue = oldValue,
+                NewValue = newValue,
+                Description = description,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _activityRepository.AddAsync(activity);
 
             return ServiceResult.Ok("Task updated successfully.");
         }
